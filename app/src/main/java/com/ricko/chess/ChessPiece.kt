@@ -1,0 +1,31 @@
+package com.ricko.chess
+
+import android.view.View
+import androidx.constraintlayout.widget.ConstraintLayout
+import kotlinx.android.synthetic.main.activity_main.*
+
+data class ChessPiece(
+    val pieceColor: PieceColor,
+    var coordinates: ArrayList<Int> = arrayListOf(-1, -1),
+    var pieceType: PieceType,
+    val pieceView: View
+) {
+    val pieceValue: Int by lazy {
+        when (pieceType) {
+            PieceType.KING -> 4
+            PieceType.QUEEN -> 9
+            PieceType.ROOK -> 5
+            PieceType.KNIGHT -> 3
+            PieceType.BISHOP -> 3
+            PieceType.PAWN -> 1
+        }
+    }
+}
+
+enum class PieceType {
+    KING, QUEEN, ROOK, KNIGHT, BISHOP, PAWN
+}
+
+enum class PieceColor {
+    BLACK, WHITE
+}
