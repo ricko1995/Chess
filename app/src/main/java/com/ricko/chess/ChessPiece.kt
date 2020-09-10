@@ -3,6 +3,8 @@ package com.ricko.chess
 import android.view.View
 import androidx.constraintlayout.widget.ConstraintLayout
 import kotlinx.android.synthetic.main.activity_main.*
+import java.util.*
+import kotlin.collections.ArrayList
 
 data class ChessPiece(
     val pieceColor: PieceColor,
@@ -10,7 +12,8 @@ data class ChessPiece(
     var pieceType: PieceType,
     val pieceView: View,
     var chessCoordinates: ArrayList<Int> = arrayListOf(-1, -1),
-    var wasLastMoved: Boolean = false
+    var wasLastMoved: Boolean = false,
+    val id: String = UUID.randomUUID().toString()
 ) {
     val pieceValue: Int by lazy {
         when (pieceType) {

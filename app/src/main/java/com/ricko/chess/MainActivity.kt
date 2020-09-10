@@ -5,6 +5,7 @@ import android.view.MotionEvent
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
+import com.ricko.chess.PieceManipulationHelper.allChessPieces
 import com.ricko.chess.PieceManipulationHelper.createBishops
 import com.ricko.chess.PieceManipulationHelper.createKings
 import com.ricko.chess.PieceManipulationHelper.createKnights
@@ -87,6 +88,11 @@ class MainActivity : AppCompatActivity() {
                         } else {
                             resetPeacePosition(it)
                         }
+                    }
+                    allChessPieces.find { it.wasLastMoved }?.let {
+                        if (it.pieceColor == PieceColor.WHITE) {
+                            txtNextOnMove.text = "Black to move"
+                        } else txtNextOnMove.text = "White to move"
                     }
                 }
             }

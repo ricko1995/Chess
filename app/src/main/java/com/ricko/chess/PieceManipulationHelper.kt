@@ -17,6 +17,10 @@ import kotlin.collections.ArrayList
 object PieceManipulationHelper {
 
     val allChessPieces: ArrayList<ChessPiece> = arrayListOf()
+    var captureBlackPawnEnPassantOnLeft = false
+    var captureBlackPawnEnPassantOnRight = false
+    var captureWhitePawnEnPassantOnLeft = false
+    var captureWhitePawnEnPassantOnRight = false
 
     private fun ConstraintLayout.positionPeaceOnBoardForNewGame(
         chessPiece: ChessPiece
@@ -261,6 +265,47 @@ object PieceManipulationHelper {
             } else {
                 resetPeacePosition(chessPieceToMove)
                 return
+            }
+        }
+
+        if (isValidMoveForPawn) {
+            when (true) {
+                captureBlackPawnEnPassantOnLeft -> {
+                    activityLayout.capturePieceOnCoordinates(
+                        arrayListOf(
+                            futureChessCoordinates[0],
+                            futureChessCoordinates[1] + 1
+                        )
+                    )
+                    captureBlackPawnEnPassantOnLeft = false
+                }
+                captureBlackPawnEnPassantOnRight -> {
+                    activityLayout.capturePieceOnCoordinates(
+                        arrayListOf(
+                            futureChessCoordinates[0],
+                            futureChessCoordinates[1] + 1
+                        )
+                    )
+                    captureBlackPawnEnPassantOnRight = false
+                }
+                captureWhitePawnEnPassantOnLeft -> {
+                    activityLayout.capturePieceOnCoordinates(
+                        arrayListOf(
+                            futureChessCoordinates[0],
+                            futureChessCoordinates[1] - 1
+                        )
+                    )
+                    captureWhitePawnEnPassantOnLeft = false
+                }
+                captureWhitePawnEnPassantOnRight -> {
+                    activityLayout.capturePieceOnCoordinates(
+                        arrayListOf(
+                            futureChessCoordinates[0],
+                            futureChessCoordinates[1] - 1
+                        )
+                    )
+                    captureWhitePawnEnPassantOnRight = false
+                }
             }
         }
         if (anyValidMove) {
