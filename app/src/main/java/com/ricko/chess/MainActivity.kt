@@ -51,7 +51,6 @@ class MainActivity : AppCompatActivity() {
                 MotionEvent.ACTION_DOWN -> {
                     pieceToManipulate =
                         getClosestPeace(arrayListOf(motionEvent.x.toInt(), motionEvent.y.toInt()))
-                    println(pieceToManipulate?.pieceColor)
                     pieceToManipulate?.let {
                         it.pieceView.apply {
                             scaleX = 1.5f

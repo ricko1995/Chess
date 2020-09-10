@@ -10,6 +10,7 @@ data class ChessPiece(
     var pieceType: PieceType,
     val pieceView: View,
     var chessCoordinates: ArrayList<Int> = arrayListOf(-1, -1),
+    var wasLastMoved: Boolean = false
 ) {
     val pieceValue: Int by lazy {
         when (pieceType) {
