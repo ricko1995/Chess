@@ -6,9 +6,10 @@ import kotlinx.android.synthetic.main.activity_main.*
 
 data class ChessPiece(
     val pieceColor: PieceColor,
-    var coordinates: ArrayList<Int> = arrayListOf(-1, -1),
+    var pixelCoordinates: ArrayList<Int> = arrayListOf(-1, -1),
     var pieceType: PieceType,
-    val pieceView: View
+    val pieceView: View,
+    var chessCoordinates: ArrayList<Int> = arrayListOf(-1, -1),
 ) {
     val pieceValue: Int by lazy {
         when (pieceType) {

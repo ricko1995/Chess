@@ -4,14 +4,19 @@ import android.content.Context
 import android.view.View
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
+import com.ricko.chess.MainActivity.Companion.activityLayout
+import com.ricko.chess.MainActivity.Companion.chessBoard
+import com.ricko.chess.ValidMoves.isValidMoveForPawn
+import java.util.*
+import kotlin.collections.ArrayList
+import kotlin.collections.HashMap
 
 object PieceManipulationHelper {
 
-    val whitePieces: ArrayList<ChessPiece> = ArrayList()
-    val blackPieces: ArrayList<ChessPiece> = ArrayList()
+    private val whitePieces: ArrayList<ChessPiece> = arrayListOf()
+    private val blackPieces: ArrayList<ChessPiece> = arrayListOf()
 
     private fun ConstraintLayout.positionPeaceOnBoardForNewGame(
-        chessBoard: View,
         chessPiece: ChessPiece
     ) {
         addView(chessPiece.pieceView)
@@ -19,19 +24,17 @@ object PieceManipulationHelper {
             chessBoard.width / 10,
             chessBoard.height / 10
         )
-        val pieceDimension = chessBoard.height / 10
-
         chessPiece.pieceView.apply {
             layoutParams = boardLayoutParams
-            x = chessPiece.coordinates[0] - pieceDimension / 2f
-            y = chessPiece.coordinates[1] + chessBoard.y - pieceDimension / 2
+            x = chessPiece.pixelCoordinates[0].toFloat()
+            y = chessPiece.pixelCoordinates[1].toFloat()
         }
-        if (chessPiece.pieceColor == PieceColor.BLACK) chessPiece.pieceView.rotationX = 180f
+//        if (chessPiece.pieceColor == PieceColor.BLACK) chessPiece.pieceView.rotationX = 180f
         invalidate()
 
     }
 
-    fun ConstraintLayout.createPawns(context: Context, chessBoard: View) {
+    fun ConstraintLayout.createPawns(context: Context) {
         val numberOfPieces = 16
         repeat(numberOfPieces) {
             val pawnView = View(context)
@@ -48,24 +51,27 @@ object PieceManipulationHelper {
                     arrayListOf(
                         it % (numberOfPieces / 2),
                         if (it < numberOfPieces / 2) 6 else 1
-                    ),
-                    chessBoard
+                    )
                 ),
                 PieceType.PAWN,
-                pawnView
+                pawnView,
+                arrayListOf(
+                    it % (numberOfPieces / 2),
+                    if (it < numberOfPieces / 2) 6 else 1
+                )
             )
             if (it < numberOfPieces / 2) {
                 whitePieces.add(chessPiece)
-                positionPeaceOnBoardForNewGame(chessBoard, whitePieces.last())
+                positionPeaceOnBoardForNewGame(whitePieces.last())
             } else {
                 blackPieces.add(chessPiece)
-                positionPeaceOnBoardForNewGame(chessBoard, blackPieces.last())
+                positionPeaceOnBoardForNewGame(blackPieces.last())
             }
 
         }
     }
 
-    fun ConstraintLayout.createKings(context: Context, chessBoard: View) {
+    fun ConstraintLayout.createKings(context: Context) {
         val numberOfPieces = 2
         repeat(numberOfPieces) {
             val kingView = View(context)
@@ -82,23 +88,27 @@ object PieceManipulationHelper {
                     arrayListOf(
                         if (it < numberOfPieces / 2) 4 else 3,
                         if (it < numberOfPieces / 2) 7 else 0
-                    ), chessBoard
+                    )
                 ),
                 PieceType.KING,
-                kingView
+                kingView,
+                arrayListOf(
+                    if (it < numberOfPieces / 2) 4 else 3,
+                    if (it < numberOfPieces / 2) 7 else 0
+                )
             )
 
             if (it < numberOfPieces / 2) {
                 whitePieces.add(chessPiece)
-                positionPeaceOnBoardForNewGame(chessBoard, whitePieces.last())
+                positionPeaceOnBoardForNewGame(whitePieces.last())
             } else {
                 blackPieces.add(chessPiece)
-                positionPeaceOnBoardForNewGame(chessBoard, blackPieces.last())
+                positionPeaceOnBoardForNewGame(blackPieces.last())
             }
         }
     }
 
-    fun ConstraintLayout.createQueens(context: Context, chessBoard: View) {
+    fun ConstraintLayout.createQueens(context: Context) {
         val numberOfPieces = 2
         repeat(numberOfPieces) {
             val queenView = View(context)
@@ -115,23 +125,27 @@ object PieceManipulationHelper {
                     arrayListOf(
                         if (it < numberOfPieces / 2) 3 else 4,
                         if (it < numberOfPieces / 2) 7 else 0
-                    ), chessBoard
+                    )
                 ),
                 PieceType.QUEEN,
-                queenView
+                queenView,
+                arrayListOf(
+                    if (it < numberOfPieces / 2) 3 else 4,
+                    if (it < numberOfPieces / 2) 7 else 0
+                )
             )
 
             if (it < numberOfPieces / 2) {
                 whitePieces.add(chessPiece)
-                positionPeaceOnBoardForNewGame(chessBoard, whitePieces.last())
+                positionPeaceOnBoardForNewGame(whitePieces.last())
             } else {
                 blackPieces.add(chessPiece)
-                positionPeaceOnBoardForNewGame(chessBoard, blackPieces.last())
+                positionPeaceOnBoardForNewGame(blackPieces.last())
             }
         }
     }
 
-    fun ConstraintLayout.createBishops(context: Context, chessBoard: View) {
+    fun ConstraintLayout.createBishops(context: Context) {
         val numberOfPieces = 4
         val bishopsCoordinate: ArrayList<ArrayList<Int>> =
             arrayListOf(arrayListOf(2, 7), arrayListOf(5, 7), arrayListOf(2, 0), arrayListOf(5, 0))
@@ -147,25 +161,26 @@ object PieceManipulationHelper {
             val chessPiece = ChessPiece(
                 if (it < numberOfPieces / 2) PieceColor.WHITE else PieceColor.BLACK,
                 fromChessCoordinatesToPixelCoordinates(
-                    bishopsCoordinate[it], chessBoard
+                    bishopsCoordinate[it]
                 ),
                 PieceType.BISHOP,
-                bishopView
+                bishopView,
+                bishopsCoordinate[it]
             )
 
             if (it < numberOfPieces / 2) {
                 whitePieces.add(chessPiece)
-                positionPeaceOnBoardForNewGame(chessBoard, whitePieces.last())
+                positionPeaceOnBoardForNewGame(whitePieces.last())
             } else {
                 blackPieces.add(chessPiece)
-                positionPeaceOnBoardForNewGame(chessBoard, blackPieces.last())
+                positionPeaceOnBoardForNewGame(blackPieces.last())
             }
         }
     }
 
-    fun ConstraintLayout.createKnights(context: Context, chessBoard: View) {
+    fun ConstraintLayout.createKnights(context: Context) {
         val numberOfPieces = 4
-        val bishopsCoordinate: ArrayList<ArrayList<Int>> =
+        val knightsCoordinate: ArrayList<ArrayList<Int>> =
             arrayListOf(arrayListOf(1, 7), arrayListOf(6, 7), arrayListOf(1, 0), arrayListOf(6, 0))
         repeat(numberOfPieces) {
             val knightView = View(context)
@@ -179,25 +194,26 @@ object PieceManipulationHelper {
             val chessPiece = ChessPiece(
                 if (it < numberOfPieces / 2) PieceColor.WHITE else PieceColor.BLACK,
                 fromChessCoordinatesToPixelCoordinates(
-                    bishopsCoordinate[it], chessBoard
+                    knightsCoordinate[it]
                 ),
                 PieceType.KNIGHT,
-                knightView
+                knightView,
+                knightsCoordinate[it]
             )
 
             if (it < numberOfPieces / 2) {
                 whitePieces.add(chessPiece)
-                positionPeaceOnBoardForNewGame(chessBoard, whitePieces.last())
+                positionPeaceOnBoardForNewGame(whitePieces.last())
             } else {
                 blackPieces.add(chessPiece)
-                positionPeaceOnBoardForNewGame(chessBoard, blackPieces.last())
+                positionPeaceOnBoardForNewGame(blackPieces.last())
             }
         }
     }
 
-    fun ConstraintLayout.createRooks(context: Context, chessBoard: View) {
+    fun ConstraintLayout.createRooks(context: Context) {
         val numberOfPieces = 4
-        val bishopsCoordinate: ArrayList<ArrayList<Int>> =
+        val rooksCoordinate: ArrayList<ArrayList<Int>> =
             arrayListOf(arrayListOf(0, 7), arrayListOf(7, 7), arrayListOf(0, 0), arrayListOf(7, 0))
         repeat(numberOfPieces) {
             val rookView = View(context)
@@ -211,18 +227,19 @@ object PieceManipulationHelper {
             val chessPiece = ChessPiece(
                 if (it < numberOfPieces / 2) PieceColor.WHITE else PieceColor.BLACK,
                 fromChessCoordinatesToPixelCoordinates(
-                    bishopsCoordinate[it], chessBoard
+                    rooksCoordinate[it]
                 ),
                 PieceType.ROOK,
-                rookView
+                rookView,
+                rooksCoordinate[it]
             )
 
             if (it < numberOfPieces / 2) {
                 whitePieces.add(chessPiece)
-                positionPeaceOnBoardForNewGame(chessBoard, whitePieces.last())
+                positionPeaceOnBoardForNewGame(whitePieces.last())
             } else {
                 blackPieces.add(chessPiece)
-                positionPeaceOnBoardForNewGame(chessBoard, blackPieces.last())
+                positionPeaceOnBoardForNewGame(blackPieces.last())
             }
         }
     }
@@ -240,30 +257,96 @@ object PieceManipulationHelper {
 
     fun movePieceToCoordinates(
         coordinates: ArrayList<Int>,
-        chessBoard: View,
         chessPiece: ChessPiece
     ) {
-        chessPiece.pieceView.x =
-            fromChessCoordinatesToPixelCoordinates(coordinates, chessBoard)[0].toFloat()
-        chessPiece.pieceView.y =
-            fromChessCoordinatesToPixelCoordinates(coordinates, chessBoard)[1].toFloat()
-        chessPiece.coordinates = coordinates
+        val chessCoordinates = fromPixelCoordinatesToChessCoordinates(coordinates)
+        val pixelCoordinates = fromChessCoordinatesToPixelCoordinates(chessCoordinates)
+        if (chessPiece.pieceType == PieceType.PAWN &&
+            !isValidMoveForPawn(chessCoordinates, chessPiece)
+        ) {
+            resetPeacePosition(chessPiece)
+            return
+        }
 
+//        isSomePieceAlreadyOnCoordinates(chessCoordinates)?.let {
+//            if (it == chessPiece.pieceColor) {
+//                resetPeacePosition(chessPiece)
+//                return
+//            }
+//        }
+        activityLayout.capturePieceOnCoordinates(chessCoordinates)
+        chessPiece.pieceView.x = pixelCoordinates[0].toFloat()
+        chessPiece.pieceView.y = pixelCoordinates[1].toFloat()
+        chessPiece.pixelCoordinates = pixelCoordinates
+        chessPiece.chessCoordinates = chessCoordinates
+    }
+
+    private fun ConstraintLayout.capturePieceOnCoordinates(chessCoordinates: ArrayList<Int>) {
+        if (isSomePieceAlreadyOnCoordinates(chessCoordinates) == null) return
+        var toRemove: ChessPiece? = null
+        for (whitePiece in whitePieces) {
+            if (whitePiece.chessCoordinates == chessCoordinates) {
+                this.removeView(whitePiece.pieceView)
+                toRemove = whitePiece
+            }
+        }
+        toRemove?.let {
+            whitePieces.remove(it)
+        }
+        toRemove = null
+
+        for (blackPiece in blackPieces) {
+            if (blackPiece.chessCoordinates == chessCoordinates) {
+                this.removeView(blackPiece.pieceView)
+                toRemove = blackPiece
+            }
+        }
+        toRemove?.let {
+            blackPieces.remove(it)
+        }
+    }
+
+    fun isSomePieceAlreadyOnCoordinates(chessCoordinates: ArrayList<Int>): ChessPiece? {
+        for (whitePiece in whitePieces) {
+            if (whitePiece.chessCoordinates == chessCoordinates) return whitePiece
+        }
+        for (blackPiece in blackPieces) {
+            if (blackPiece.chessCoordinates == chessCoordinates) return blackPiece
+        }
+        return null
+    }
+
+    fun getClosestPeace(coordinates: ArrayList<Int>): ChessPiece? {
+        val chessCord = fromPixelCoordinatesToChessCoordinates(coordinates)
+        for (whitePeace in whitePieces) {
+            if (whitePeace.chessCoordinates == chessCord) return whitePeace
+        }
+        for (blackPeace in blackPieces) {
+            if (blackPeace.chessCoordinates == chessCord) return blackPeace
+        }
+        return null
+    }
+
+    fun resetPeacePosition(chessPiece: ChessPiece) {
+        chessPiece.pieceView.apply {
+            x = chessPiece.pixelCoordinates[0].toFloat()
+            y = chessPiece.pixelCoordinates[1].toFloat()
+        }
     }
 
     private fun fromChessCoordinatesToPixelCoordinates(
-        coordinates: ArrayList<Int>,
-        chessBoard: View
+        coordinates: ArrayList<Int>
     ): ArrayList<Int> {
+        val pieceDimension = chessBoard.height / 10
         if (coordinates[0] !in 0..7 && coordinates[1] !in 0..7) return arrayListOf(-1, -1)
-        val x = chessBoard.width / 16 + coordinates[0] * chessBoard.width / 8
-        val y = chessBoard.height / 16 + coordinates[1] * chessBoard.height / 8
+        val x = chessBoard.width / 16 + coordinates[0] * chessBoard.width / 8 - pieceDimension / 2
+        val y =
+            chessBoard.height / 16 + coordinates[1] * chessBoard.height / 8 + chessBoard.y.toInt() - pieceDimension / 2
         return arrayListOf(x, y)
     }
 
-    private fun fromPixelCoordinatesToChessCoordinates(
-        coordinates: ArrayList<Int>,
-        chessBoard: View
+    fun fromPixelCoordinatesToChessCoordinates(
+        coordinates: ArrayList<Int>
     ): ArrayList<Int> {
         val x: Int
         val y: Int
@@ -299,7 +382,7 @@ object PieceManipulationHelper {
             in (0)..(chessBoard.height / 8) -> {
                 y = 0
             }
-            in (chessBoard.height / 8)..(+chessBoard.height / 8 * 2) -> {
+            in (chessBoard.height / 8)..(chessBoard.height / 8 * 2) -> {
                 y = 1
             }
             in (chessBoard.height / 8 * 2)..(chessBoard.height / 8 * 3) -> {

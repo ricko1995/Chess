@@ -3,76 +3,99 @@ package com.ricko.chess
 import android.os.Bundle
 import android.view.MotionEvent
 import android.view.View
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
-import androidx.core.content.ContextCompat
 import com.ricko.chess.PieceManipulationHelper.createBishops
 import com.ricko.chess.PieceManipulationHelper.createKings
 import com.ricko.chess.PieceManipulationHelper.createKnights
 import com.ricko.chess.PieceManipulationHelper.createPawns
 import com.ricko.chess.PieceManipulationHelper.createQueens
 import com.ricko.chess.PieceManipulationHelper.createRooks
+import com.ricko.chess.PieceManipulationHelper.getClosestPeace
+import com.ricko.chess.PieceManipulationHelper.movePieceToCoordinates
 import com.ricko.chess.PieceManipulationHelper.removeAllPiecesFromBoard
-import com.ricko.chess.PieceManipulationHelper.whitePieces
+import com.ricko.chess.PieceManipulationHelper.resetPeacePosition
 import kotlinx.android.synthetic.main.activity_main.*
-import kotlin.properties.Delegates
 
 class MainActivity : AppCompatActivity() {
 
     companion object {
-        var pieceDimensions by Delegates.notNull<Int>()
+        lateinit var chessBoard: View
+        lateinit var activityLayout: ConstraintLayout
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        pieceDimensions = chessBoard.height / 10
+        chessBoard = findViewById(R.id.chess_board)
+        activityLayout = findViewById(R.id.activity_layout)
 
         var newGame = false
         btnNewGame.setOnClickListener {
             if (newGame) {
                 activityLayout.removeAllPiecesFromBoard()
             } else {
-                activityLayout.createPawns(this, chessBoard)
-                activityLayout.createKings(this, chessBoard)
-                activityLayout.createQueens(this, chessBoard)
-                activityLayout.createBishops(this, chessBoard)
-                activityLayout.createKnights(this, chessBoard)
-                activityLayout.createRooks(this, chessBoard)
+                activityLayout.createPawns(this)
+                activityLayout.createKings(this)
+                activityLayout.createQueens(this)
+                activityLayout.createBishops(this)
+                activityLayout.createKnights(this)
+                activityLayout.createRooks(this)
             }
             newGame = !newGame
         }
-
-        chessBoard.setOnClickListener {
-            Toast.makeText(this, whitePieces.size.toString(), Toast.LENGTH_SHORT).show()
-        }
-
-    }
-
-    private fun setupPiecesOnTouchListeners() {
-        for (whitePeace in whitePieces) {
-            whitePeace.pieceView.setOnTouchListener { view, motionEvent ->
-                when (motionEvent.action) {
-                    MotionEvent.ACTION_DOWN -> {
-                        view.scaleX = 1.5f
-                        view.scaleY = 1.5f
-                    }
-                    MotionEvent.ACTION_UP -> {
-                        view.scaleX = 1f
-                        view.scaleY = 1f
-                    }
-                    MotionEvent.ACTION_MOVE -> {
-                        view.x = motionEvent.x
-                        view.y = motionEvent.y
+        var pieceToManipulate: ChessPiece? = null
+        chessBoard.setOnTouchListener { view, motionEvent ->
+            when (motionEvent.action) {
+                MotionEvent.ACTION_DOWN -> {
+                    pieceToManipulate =
+                        getClosestPeace(arrayListOf(motionEvent.x.toInt(), motionEvent.y.toInt()))
+                    println(pieceToManipulate?.pieceColor)
+                    pieceToManipulate?.let {
+                        it.pieceView.apply {
+                            scaleX = 1.5f
+                            scaleY = 1.5f
+                        }
                     }
                 }
 
-                view.performClick()
-                return@setOnTouchListener true
+                MotionEvent.ACTION_MOVE -> {
+                    pieceToManipulate?.let {
+                        it.pieceView.apply {
+                            x = motionEvent.rawX - this.width / 2
+                            y = motionEvent.rawY - chessBoard.y / 2 - this.height / 2
+                        }
+                    }
+                }
+
+                MotionEvent.ACTION_UP -> {
+                    pieceToManipulate?.let {
+                        it.pieceView.apply {
+                            scaleX = 1f
+                            scaleY = 1f
+                        }
+                        if (motionEvent.x.toInt() in 0..view.width &&
+                            motionEvent.y.toInt() in 0..view.height
+                        ) {
+                            movePieceToCoordinates(
+                                arrayListOf(
+                                    motionEvent.x.toInt(),
+                                    motionEvent.y.toInt()
+                                ),
+                                it
+                            )
+                        } else {
+                            resetPeacePosition(it)
+                        }
+                    }
+                }
             }
+
+            view.performClick()
+            return@setOnTouchListener true
         }
+
     }
 
 
