@@ -458,8 +458,9 @@ object PieceManipulationHelper {
 
     fun resetPeacePosition(chessPiece: ChessPiece) {
         chessPiece.pieceView?.apply {
-            x = chessPiece.pixelCoordinates[0].toFloat()
-            y = chessPiece.pixelCoordinates[1].toFloat()
+            animate().translationX(chessPiece.pixelCoordinates[0].toFloat()).translationY(chessPiece.pixelCoordinates[1].toFloat()).duration = 100L
+//            x = chessPiece.pixelCoordinates[0].toFloat()
+//            y = chessPiece.pixelCoordinates[1].toFloat()
         }
     }
 

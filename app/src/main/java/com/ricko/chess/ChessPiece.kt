@@ -13,6 +13,10 @@ data class ChessPiece(
     val id: String = UUID.randomUUID().toString(),
     var wasPieceMoved: Boolean = false
 ) {
+    init {
+        if (this.pieceColor == PieceColor.BLACK) wasLastMoved = true
+    }
+
     fun pieceValue(): Int {
         return when (this.pieceType) {
             PieceType.KING -> 4
