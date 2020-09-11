@@ -1,9 +1,7 @@
 package com.ricko.chess
 
-import android.view.View
 import android.widget.ImageView
 import java.util.*
-import kotlin.collections.ArrayList
 
 data class ChessPiece(
     val pieceColor: PieceColor,
@@ -26,7 +24,7 @@ data class ChessPiece(
         }
     }
 
-    fun anyValidMove(futureCoordinates: ArrayList<Int>, testForColor: Boolean = true): Boolean {
+    fun isValidMove(futureCoordinates: ArrayList<Int>, testForColor: Boolean = true): Boolean {
         val anyPieceOnFutureCoordinates = PieceManipulationHelper.isSomePieceAlreadyOnCoordinates(futureCoordinates)
         if (anyPieceOnFutureCoordinates?.pieceColor == this.pieceColor) return false
         val lastMovedPeace = PieceManipulationHelper.allChessPieces.find { it.wasLastMoved }

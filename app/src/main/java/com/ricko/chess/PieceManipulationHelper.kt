@@ -3,6 +3,7 @@ package com.ricko.chess
 import android.app.Dialog
 import android.view.View
 import android.widget.ImageView
+import android.widget.Toast
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
 import com.ricko.chess.MainActivity.Companion.activityLayout
@@ -196,18 +197,42 @@ object PieceManipulationHelper {
         val whitePieces = allChessPieces.filter { it.pieceColor == PieceColor.WHITE }
 
         for (piece in whitePieces) {
-            if (piece.anyValidMove(king!!.chessCoordinates, false)) return king
+            if (piece.isValidMove(king!!.chessCoordinates, false)) {
+                checkIfCheckMat(PieceColor.BLACK)
+                return king
+            }
         }
         return null
     }
+
     fun isWhiteKingInCheck(): ChessPiece? {
         val king = allChessPieces.filter { it.pieceType == PieceType.KING }.find { it.pieceColor == PieceColor.WHITE }
         val blackPieces = allChessPieces.filter { it.pieceColor == PieceColor.BLACK }
 
         for (piece in blackPieces) {
-            if (piece.anyValidMove(king!!.chessCoordinates, false)) return king
+            if (piece.isValidMove(king!!.chessCoordinates, false)) {
+                checkIfCheckMat(PieceColor.WHITE)
+                return king
+            }
         }
         return null
+    }
+
+    private fun checkIfCheckMat(color: PieceColor) {
+        val pieces = allChessPieces.filter { it.pieceColor == color }
+        for (piece in pieces) {
+            for (i in 0..7) {
+                for (j in 0..7) {
+                    if(piece.isValidMove(arrayListOf(i, j), false)){
+                        if(isValidMoveToBlockCheck(arrayListOf(i, j), piece)) {
+                            return
+                        }
+                    }
+                }
+            }
+        }
+        val winner = if(color==PieceColor.BLACK) PieceColor.WHITE else PieceColor.BLACK
+        Toast.makeText(context, "${winner.name} won the game!", Toast.LENGTH_SHORT).show()
     }
 
     fun isValidMoveToBlockCheck(futureChessCoordinates: ArrayList<Int>, chessPieceToMove: ChessPiece): Boolean {
@@ -224,7 +249,7 @@ object PieceManipulationHelper {
 
         for (piece in allChessPieces.filter { it.pieceColor != chessPieceToMove.pieceColor }) {
             king?.let {
-                if (piece.anyValidMove(if (isPieceToMoveKing) dummyPiece.chessCoordinates else king.chessCoordinates, false)) {
+                if (piece.isValidMove(if (isPieceToMoveKing) dummyPiece.chessCoordinates else king.chessCoordinates, false)) {
                     bool = false
                 }
             }
@@ -242,7 +267,6 @@ object PieceManipulationHelper {
         chessPieceToMove: ChessPiece
     ) {
 
-        println(chessPieceToMove.pieceType == PieceType.ROOK)
         if (!isValidMoveToBlockCheck(futureChessCoordinates, chessPieceToMove)) {
             resetPeacePosition(chessPieceToMove)
             return
@@ -315,10 +339,10 @@ object PieceManipulationHelper {
         val futureChessCoordinates = fromPixelCoordinatesToChessCoordinates(futurePixelCoordinates)
         val anyPieceOnFutureCoordinates = isSomePieceAlreadyOnCoordinates(futureChessCoordinates)
         val isValidMoveForPawn = isValidMoveForPawn(futureChessCoordinates, chessPieceToMove)
-        val anyValidMove = chessPieceToMove.anyValidMove(futureChessCoordinates)
+        val isValidMove = chessPieceToMove.isValidMove(futureChessCoordinates)
 
         anyPieceOnFutureCoordinates?.let {
-            if (it.pieceColor != chessPieceToMove.pieceColor && anyValidMove) {
+            if (it.pieceColor != chessPieceToMove.pieceColor && isValidMove) {
                 updateMovedPiece(futureChessCoordinates, chessPieceToMove)
                 return
             } else {
@@ -367,7 +391,7 @@ object PieceManipulationHelper {
                 }
             }
         }
-        if (anyValidMove) {
+        if (isValidMove) {
             updateMovedPiece(futureChessCoordinates, chessPieceToMove)
         } else resetPeacePosition(chessPieceToMove)
 
