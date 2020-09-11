@@ -53,7 +53,7 @@ class MainActivity : AppCompatActivity() {
                     pieceToManipulate =
                         getClosestPeace(arrayListOf(motionEvent.x.toInt(), motionEvent.y.toInt()))
                     pieceToManipulate?.let {
-                        it.pieceView.apply {
+                        it.pieceView?.apply {
                             scaleX = 1.5f
                             scaleY = 1.5f
                         }
@@ -62,7 +62,7 @@ class MainActivity : AppCompatActivity() {
 
                 MotionEvent.ACTION_MOVE -> {
                     pieceToManipulate?.let {
-                        it.pieceView.apply {
+                        it.pieceView?.apply {
                             x = motionEvent.rawX - this.width / 2
                             y = motionEvent.rawY - chessBoard.y / 2 - this.height / 2
                         }
@@ -71,7 +71,7 @@ class MainActivity : AppCompatActivity() {
 
                 MotionEvent.ACTION_UP -> {
                     pieceToManipulate?.let {
-                        it.pieceView.apply {
+                        it.pieceView?.apply {
                             scaleX = 1f
                             scaleY = 1f
                         }

@@ -1,11 +1,13 @@
 package com.ricko.chess
 
+import android.view.View
 import com.ricko.chess.PieceManipulationHelper.allChessPieces
 import com.ricko.chess.PieceManipulationHelper.captureBlackPawnEnPassantOnLeft
 import com.ricko.chess.PieceManipulationHelper.captureBlackPawnEnPassantOnRight
 import com.ricko.chess.PieceManipulationHelper.captureWhitePawnEnPassantOnLeft
 import com.ricko.chess.PieceManipulationHelper.captureWhitePawnEnPassantOnRight
 import com.ricko.chess.PieceManipulationHelper.isSomePieceAlreadyOnCoordinates
+import kotlin.math.abs
 
 object ValidMoves {
 
@@ -146,14 +148,14 @@ object ValidMoves {
         return false
     }
 
-    fun isValidMoveForRook(
+    fun isValidMoveForRookAndQueen(
         futureCoordinates: ArrayList<Int>,
         chessPiece: ChessPiece
     ): Boolean {
         val pastCoordinates = chessPiece.chessCoordinates
         val anyPieceOnFutureCoordinates = isSomePieceAlreadyOnCoordinates(futureCoordinates)
         val lastMovedPeace = allChessPieces.find { it.wasLastMoved }
-        if (chessPiece.pieceType != PieceType.ROOK) return false
+        if (chessPiece.pieceType != PieceType.ROOK && chessPiece.pieceType != PieceType.QUEEN) return false
         lastMovedPeace?.let {
             if (it.pieceColor == chessPiece.pieceColor) return false
         }
@@ -162,14 +164,14 @@ object ValidMoves {
 
         if (pastCoordinates[0] == futureCoordinates[0]) {
             if (pastCoordinates[1] < futureCoordinates[1]) {
-                for (i in pastCoordinates[1] until futureCoordinates[1]) {
-                    isSomePieceAlreadyOnCoordinates(arrayListOf(futureCoordinates[0], i))?.let {
+                for (x in pastCoordinates[1] until futureCoordinates[1]) {
+                    isSomePieceAlreadyOnCoordinates(arrayListOf(futureCoordinates[0], x))?.let {
                         if (it != chessPiece) return false
                     }
                 }
             } else if (pastCoordinates[1] > futureCoordinates[1]) {
-                for (i in pastCoordinates[1]..futureCoordinates[1] + 1) {
-                    isSomePieceAlreadyOnCoordinates(arrayListOf(futureCoordinates[0], i))?.let {
+                for (x in pastCoordinates[1] downTo futureCoordinates[1] + 1) {
+                    isSomePieceAlreadyOnCoordinates(arrayListOf(futureCoordinates[0], x))?.let {
                         if (it != chessPiece) return false
                     }
                 }
@@ -178,14 +180,14 @@ object ValidMoves {
 
         if (pastCoordinates[1] == futureCoordinates[1]) {
             if (pastCoordinates[0] < futureCoordinates[0]) {
-                for (i in pastCoordinates[0] until futureCoordinates[0]) {
-                    isSomePieceAlreadyOnCoordinates(arrayListOf(i, futureCoordinates[1]))?.let {
+                for (x in pastCoordinates[0] until futureCoordinates[0]) {
+                    isSomePieceAlreadyOnCoordinates(arrayListOf(x, futureCoordinates[1]))?.let {
                         if (it != chessPiece) return false
                     }
                 }
             } else if (pastCoordinates[0] > futureCoordinates[0]) {
-                for (i in pastCoordinates[0]..futureCoordinates[0] + 1) {
-                    isSomePieceAlreadyOnCoordinates(arrayListOf(i, futureCoordinates[1]))?.let {
+                for (x in pastCoordinates[0] downTo futureCoordinates[0] + 1) {
+                    isSomePieceAlreadyOnCoordinates(arrayListOf(x, futureCoordinates[1]))?.let {
                         if (it != chessPiece) return false
                     }
 
@@ -199,12 +201,8 @@ object ValidMoves {
         futureCoordinates: ArrayList<Int>,
         chessPiece: ChessPiece
     ): Boolean {
-        val pastCoordinates = chessPiece.chessCoordinates
         val anyPieceOnFutureCoordinates = isSomePieceAlreadyOnCoordinates(futureCoordinates)
         val lastMovedPeace = allChessPieces.find { it.wasLastMoved }
-        lastMovedPeace?.let {
-            if (it.pieceColor == chessPiece.pieceColor) return false
-        }
         if (chessPiece.pieceType != PieceType.KNIGHT) return false
         lastMovedPeace?.let {
             if (it.pieceColor == chessPiece.pieceColor) return false
@@ -228,51 +226,90 @@ object ValidMoves {
         return false
     }
 
-    fun isValidMoveForBishop(
+    fun isValidMoveForBishopAndQueen(
         futureCoordinates: ArrayList<Int>,
         chessPiece: ChessPiece
     ): Boolean {
         val pastCoordinates = chessPiece.chessCoordinates
         val anyPieceOnFutureCoordinates = isSomePieceAlreadyOnCoordinates(futureCoordinates)
         val lastMovedPeace = allChessPieces.find { it.wasLastMoved }
+
         lastMovedPeace?.let {
             if (it.pieceColor == chessPiece.pieceColor) return false
         }
-        if (chessPiece.pieceType != PieceType.BISHOP) return false
 
+        if (chessPiece.pieceType != PieceType.BISHOP && chessPiece.pieceType != PieceType.QUEEN) return false
 
-        return false
-    }
+        if (abs(futureCoordinates[0] - pastCoordinates[0]) != abs(futureCoordinates[1] - pastCoordinates[1])) return false
 
-    fun isValidMoveForQueen(
-        futureCoordinates: ArrayList<Int>,
-        chessPiece: ChessPiece
-    ): Boolean {
-        val pastCoordinates = chessPiece.chessCoordinates
-        val anyPieceOnFutureCoordinates = isSomePieceAlreadyOnCoordinates(futureCoordinates)
-        val lastMovedPeace = allChessPieces.find { it.wasLastMoved }
-        lastMovedPeace?.let {
-            if (it.pieceColor == chessPiece.pieceColor) return false
+        if (pastCoordinates[0] < futureCoordinates[0] && pastCoordinates[1] < futureCoordinates[1]) {
+            for (i in 0 until abs(futureCoordinates[0] - pastCoordinates[0])) {
+                isSomePieceAlreadyOnCoordinates(arrayListOf(pastCoordinates[0] + i, pastCoordinates[1] + i))?.let {
+                    if (it != chessPiece) return false
+                }
+            }
+        } else if (pastCoordinates[0] > futureCoordinates[0] && pastCoordinates[1] < futureCoordinates[1]) {
+            for (i in 0 until abs(futureCoordinates[0] - pastCoordinates[0])) {
+                isSomePieceAlreadyOnCoordinates(arrayListOf(pastCoordinates[0] - i, pastCoordinates[1] + i))?.let {
+                    if (it != chessPiece) return false
+                }
+            }
+        } else if (pastCoordinates[0] < futureCoordinates[0] && pastCoordinates[1] > futureCoordinates[1]) {
+            for (i in 0 until abs(futureCoordinates[0] - pastCoordinates[0])) {
+                isSomePieceAlreadyOnCoordinates(arrayListOf(pastCoordinates[0] + i, pastCoordinates[1] - i))?.let {
+                    if (it != chessPiece) return false
+                }
+            }
+        } else if (pastCoordinates[0] > futureCoordinates[0] && pastCoordinates[1] > futureCoordinates[1]) {
+            for (i in 0 until abs(futureCoordinates[0] - pastCoordinates[0])) {
+                isSomePieceAlreadyOnCoordinates(arrayListOf(pastCoordinates[0] - i, pastCoordinates[1] - i))?.let {
+                    if (it != chessPiece) return false
+                }
+            }
         }
-        if (chessPiece.pieceType != PieceType.QUEEN) return false
-
-
-        return false
+        return true
     }
 
     fun isValidMoveForKing(
         futureCoordinates: ArrayList<Int>,
         chessPiece: ChessPiece
     ): Boolean {
-        val pastCoordinates = chessPiece.chessCoordinates
         val anyPieceOnFutureCoordinates = isSomePieceAlreadyOnCoordinates(futureCoordinates)
         val lastMovedPeace = allChessPieces.find { it.wasLastMoved }
         lastMovedPeace?.let {
             if (it.pieceColor == chessPiece.pieceColor) return false
         }
         if (chessPiece.pieceType != PieceType.KING) return false
+        if (anyPieceOnFutureCoordinates?.pieceColor == chessPiece.pieceColor) return false
 
-
+        val currentCoordinatesX = chessPiece.chessCoordinates[0]
+        val currentCoordinatesY = chessPiece.chessCoordinates[1]
+        val validKingCoordinates: ArrayList<ArrayList<Int>> =
+            arrayListOf(
+                arrayListOf(currentCoordinatesX, currentCoordinatesY + 1),
+                arrayListOf(currentCoordinatesX, currentCoordinatesY - 1),
+                arrayListOf(currentCoordinatesX + 1, currentCoordinatesY),
+                arrayListOf(currentCoordinatesX - 1, currentCoordinatesY),
+                arrayListOf(currentCoordinatesX + 1, currentCoordinatesY + 1),
+                arrayListOf(currentCoordinatesX - 1, currentCoordinatesY - 1),
+                arrayListOf(currentCoordinatesX + 1, currentCoordinatesY - 1),
+                arrayListOf(currentCoordinatesX - 1, currentCoordinatesY + 1),
+            )
+        if (validKingCoordinates.contains(futureCoordinates)) return true
         return false
     }
+
+//    private fun kingInCheck(): Boolean {
+//        val lastMovedPeaceColor = allChessPieces.find { it.wasLastMoved }?.pieceColor
+//        lastMovedPeaceColor?.let {
+//            val whiteOrBlackPieces = allChessPieces.filter { it.pieceColor != lastMovedPeaceColor }
+//            val blackOrWhiteKing = allChessPieces.filter { it.pieceType == PieceType.KING }.find { it.pieceColor == lastMovedPeaceColor }
+//            for (piece in whiteOrBlackPieces) {
+//                if (piece.anyValidMove(blackOrWhiteKing!!.chessCoordinates)) {
+//                    return true
+//                }
+//            }
+//        }
+//        return false
+//    }
 }

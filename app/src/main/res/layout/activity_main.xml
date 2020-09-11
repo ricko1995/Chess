@@ -9,17 +9,17 @@
 
     <TextView
         android:id="@+id/txtNextOnMove"
+        style="@style/TextAppearance.AppCompat.Headline"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:fontFamily="serif-monospace"
+        android:textStyle="bold|italic"
         app:layout_constraintBottom_toTopOf="@+id/chess_board"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        tools:text="White to move"
-        style="@style/TextAppearance.AppCompat.Headline"
-        android:fontFamily="serif-monospace"
-        android:textStyle="bold|italic"/>
+        tools:text="White to move" />
 
 
     <View

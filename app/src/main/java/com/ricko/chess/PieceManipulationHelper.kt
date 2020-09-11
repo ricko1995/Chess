@@ -6,12 +6,7 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
 import com.ricko.chess.MainActivity.Companion.activityLayout
 import com.ricko.chess.MainActivity.Companion.chessBoard
-import com.ricko.chess.ValidMoves.isValidMoveForBishop
-import com.ricko.chess.ValidMoves.isValidMoveForKing
-import com.ricko.chess.ValidMoves.isValidMoveForKnight
 import com.ricko.chess.ValidMoves.isValidMoveForPawn
-import com.ricko.chess.ValidMoves.isValidMoveForQueen
-import com.ricko.chess.ValidMoves.isValidMoveForRook
 import kotlin.collections.ArrayList
 
 object PieceManipulationHelper {
@@ -30,13 +25,14 @@ object PieceManipulationHelper {
             chessBoard.width / 10,
             chessBoard.height / 10
         )
-        chessPiece.pieceView.apply {
-            layoutParams = boardLayoutParams
-            x = chessPiece.pixelCoordinates[0].toFloat()
-            y = chessPiece.pixelCoordinates[1].toFloat()
+        chessPiece.pieceView?.let {
+            it.apply {
+                layoutParams = boardLayoutParams
+                x = chessPiece.pixelCoordinates[0].toFloat()
+                y = chessPiece.pixelCoordinates[1].toFloat()
+            }
         }
-        if (chessPiece.pieceColor == PieceColor.BLACK) chessPiece.pieceView.rotationX = 180f
-        invalidate()
+        if (chessPiece.pieceColor == PieceColor.BLACK) chessPiece.pieceView?.rotationX = 180f
 
     }
 
@@ -86,14 +82,14 @@ object PieceManipulationHelper {
                 if (it < numberOfPieces / 2) PieceColor.WHITE else PieceColor.BLACK,
                 fromChessCoordinatesToPixelCoordinates(
                     arrayListOf(
-                        if (it < numberOfPieces / 2) 4 else 3,
+                        4,
                         if (it < numberOfPieces / 2) 7 else 0
                     )
                 ),
                 PieceType.KING,
                 kingView,
                 arrayListOf(
-                    if (it < numberOfPieces / 2) 4 else 3,
+                    4,
                     if (it < numberOfPieces / 2) 7 else 0
                 )
             )
@@ -117,14 +113,14 @@ object PieceManipulationHelper {
                 if (it < numberOfPieces / 2) PieceColor.WHITE else PieceColor.BLACK,
                 fromChessCoordinatesToPixelCoordinates(
                     arrayListOf(
-                        if (it < numberOfPieces / 2) 3 else 4,
+                        3,
                         if (it < numberOfPieces / 2) 7 else 0
                     )
                 ),
                 PieceType.QUEEN,
                 queenView,
                 arrayListOf(
-                    if (it < numberOfPieces / 2) 3 else 4,
+                    3,
                     if (it < numberOfPieces / 2) 7 else 0
                 )
             )
@@ -221,17 +217,38 @@ object PieceManipulationHelper {
         allChessPieces.clear()
     }
 
+    private fun isKingInCheck(futureChessCoordinates: ArrayList<Int>, chessPieceToMove: ChessPiece): Boolean {
+        val king = allChessPieces.filter { it.pieceType == PieceType.KING }.find { it.pieceColor == chessPieceToMove.pieceColor }
+        val dummyPiece = ChessPiece(chessPieceToMove.pieceColor, futureChessCoordinates, chessPieceToMove.pieceType, null, futureChessCoordinates)
+        allChessPieces.add(dummyPiece)
+        var bool = false
+
+        for (piece in allChessPieces.filter { it.pieceColor != chessPieceToMove.pieceColor }) {
+            if (piece.anyValidMove(king!!.chessCoordinates)) {
+                bool = true
+            }
+        }
+        allChessPieces.remove(dummyPiece)
+        return bool
+    }
+
     private fun updateMovedPiece(
         chessPieceToMove: ChessPiece,
         futureChessCoordinates: ArrayList<Int>
     ) {
+        if (isKingInCheck(futureChessCoordinates, chessPieceToMove)) {
+            resetPeacePosition(chessPieceToMove)
+            return
+        }
+
         val normalizedFuturePixelCoordinates =
             fromChessCoordinatesToPixelCoordinates(futureChessCoordinates)
         activityLayout.capturePieceOnCoordinates(futureChessCoordinates)
-        chessPieceToMove.pieceView.x = normalizedFuturePixelCoordinates[0].toFloat()
-        chessPieceToMove.pieceView.y = normalizedFuturePixelCoordinates[1].toFloat()
+        chessPieceToMove.pieceView?.x = normalizedFuturePixelCoordinates[0].toFloat()
+        chessPieceToMove.pieceView?.y = normalizedFuturePixelCoordinates[1].toFloat()
         chessPieceToMove.pixelCoordinates = normalizedFuturePixelCoordinates
         chessPieceToMove.chessCoordinates = futureChessCoordinates
+
 
         for (piece in allChessPieces) {
             piece.wasLastMoved = false
@@ -246,17 +263,7 @@ object PieceManipulationHelper {
         val futureChessCoordinates = fromPixelCoordinatesToChessCoordinates(futurePixelCoordinates)
         val anyPieceOnFutureCoordinates = isSomePieceAlreadyOnCoordinates(futureChessCoordinates)
         val isValidMoveForPawn = isValidMoveForPawn(futureChessCoordinates, chessPieceToMove)
-        val isValidMoveForRook = isValidMoveForRook(futureChessCoordinates, chessPieceToMove)
-        val isValidMoveForKnight = isValidMoveForKnight(futureChessCoordinates, chessPieceToMove)
-        val isValidMoveForBishop = isValidMoveForBishop(futureChessCoordinates, chessPieceToMove)
-        val isValidMoveForQueen = isValidMoveForQueen(futureChessCoordinates, chessPieceToMove)
-        val isValidMoveForKing = isValidMoveForKing(futureChessCoordinates, chessPieceToMove)
-        val anyValidMove = isValidMoveForPawn ||
-                isValidMoveForRook ||
-                isValidMoveForKnight ||
-                isValidMoveForBishop ||
-                isValidMoveForQueen ||
-                isValidMoveForKing
+        val anyValidMove = chessPieceToMove.anyValidMove(futureChessCoordinates)
 
         anyPieceOnFutureCoordinates?.let {
             if (it.pieceColor != chessPieceToMove.pieceColor && anyValidMove) {
@@ -347,7 +354,7 @@ object PieceManipulationHelper {
     }
 
     fun resetPeacePosition(chessPiece: ChessPiece) {
-        chessPiece.pieceView.apply {
+        chessPiece.pieceView?.apply {
             x = chessPiece.pixelCoordinates[0].toFloat()
             y = chessPiece.pixelCoordinates[1].toFloat()
         }

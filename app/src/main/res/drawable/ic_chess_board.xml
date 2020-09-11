@@ -5,258 +5,258 @@
     android:viewportHeight="800">
   <path
       android:pathData="M-0,-0h100v100h-100z"
-      android:fillColor="#9f9f9f"
+      android:fillColor="#DDE2E3"
       android:fillType="evenOdd"/>
   <path
       android:pathData="M-0,200h100v100h-100z"
-      android:fillColor="#9f9f9f"
+      android:fillColor="#DDE2E3"
       android:fillType="evenOdd"/>
   <path
       android:pathData="M-0,400h100v100h-100z"
-      android:fillColor="#9f9f9f"
+      android:fillColor="#DDE2E3"
       android:fillType="evenOdd"/>
   <path
       android:pathData="M-0,600h100v100h-100z"
-      android:fillColor="#9f9f9f"
+      android:fillColor="#DDE2E3"
       android:fillType="evenOdd"/>
   <path
       android:pathData="M100,100h100v100h-100z"
-      android:fillColor="#9f9f9f"
+      android:fillColor="#DDE2E3"
       android:fillType="evenOdd"/>
   <path
       android:pathData="M100,300h100v100h-100z"
-      android:fillColor="#9f9f9f"
+      android:fillColor="#DDE2E3"
       android:fillType="evenOdd"/>
   <path
       android:pathData="M100,500h100v100h-100z"
-      android:fillColor="#9f9f9f"
+      android:fillColor="#DDE2E3"
       android:fillType="evenOdd"/>
   <path
       android:pathData="M100,700h100v100h-100z"
-      android:fillColor="#9f9f9f"
+      android:fillColor="#DDE2E3"
       android:fillType="evenOdd"/>
   <path
       android:pathData="M200,-0h100v100h-100z"
-      android:fillColor="#9f9f9f"
+      android:fillColor="#DDE2E3"
       android:fillType="evenOdd"/>
   <path
       android:pathData="M200,200h100v100h-100z"
-      android:fillColor="#9f9f9f"
+      android:fillColor="#DDE2E3"
       android:fillType="evenOdd"/>
   <path
       android:pathData="M200,400h100v100h-100z"
-      android:fillColor="#9f9f9f"
+      android:fillColor="#DDE2E3"
       android:fillType="evenOdd"/>
   <path
       android:pathData="M200,600h100v100h-100z"
-      android:fillColor="#9f9f9f"
+      android:fillColor="#DDE2E3"
       android:fillType="evenOdd"/>
   <path
       android:pathData="M300,100h100v100h-100z"
-      android:fillColor="#9f9f9f"
+      android:fillColor="#DDE2E3"
       android:fillType="evenOdd"/>
   <path
       android:pathData="M300,300h100v100h-100z"
-      android:fillColor="#9f9f9f"
+      android:fillColor="#DDE2E3"
       android:fillType="evenOdd"/>
   <path
       android:pathData="M300,500h100v100h-100z"
-      android:fillColor="#9f9f9f"
+      android:fillColor="#DDE2E3"
       android:fillType="evenOdd"/>
   <path
       android:pathData="M300,700h100v100h-100z"
-      android:fillColor="#9f9f9f"
+      android:fillColor="#DDE2E3"
       android:fillType="evenOdd"/>
   <path
       android:pathData="M400,-0h100v100h-100z"
-      android:fillColor="#9f9f9f"
+      android:fillColor="#DDE2E3"
       android:fillType="evenOdd"/>
   <path
       android:pathData="M400,200h100v100h-100z"
-      android:fillColor="#9f9f9f"
+      android:fillColor="#DDE2E3"
       android:fillType="evenOdd"/>
   <path
       android:pathData="M400,400h100v100h-100z"
-      android:fillColor="#9f9f9f"
+      android:fillColor="#DDE2E3"
       android:fillType="evenOdd"/>
   <path
       android:pathData="M400,600h100v100h-100z"
-      android:fillColor="#9f9f9f"
+      android:fillColor="#DDE2E3"
       android:fillType="evenOdd"/>
   <path
       android:pathData="M500,100h100v100h-100z"
-      android:fillColor="#9f9f9f"
+      android:fillColor="#DDE2E3"
       android:fillType="evenOdd"/>
   <path
       android:pathData="M500,300h100v100h-100z"
-      android:fillColor="#9f9f9f"
+      android:fillColor="#DDE2E3"
       android:fillType="evenOdd"/>
   <path
       android:pathData="M500,500h100v100h-100z"
-      android:fillColor="#9f9f9f"
+      android:fillColor="#DDE2E3"
       android:fillType="evenOdd"/>
   <path
       android:pathData="M500,700h100v100h-100z"
-      android:fillColor="#9f9f9f"
+      android:fillColor="#DDE2E3"
       android:fillType="evenOdd"/>
   <path
       android:pathData="M600,-0h100v100h-100z"
-      android:fillColor="#9f9f9f"
+      android:fillColor="#DDE2E3"
       android:fillType="evenOdd"/>
   <path
       android:pathData="M600,200h100v100h-100z"
-      android:fillColor="#9f9f9f"
+      android:fillColor="#DDE2E3"
       android:fillType="evenOdd"/>
   <path
       android:pathData="M600,400h100v100h-100z"
-      android:fillColor="#9f9f9f"
+      android:fillColor="#DDE2E3"
       android:fillType="evenOdd"/>
   <path
       android:pathData="M600,600h100v100h-100z"
-      android:fillColor="#9f9f9f"
+      android:fillColor="#DDE2E3"
       android:fillType="evenOdd"/>
   <path
       android:pathData="M700,100h100v100h-100z"
-      android:fillColor="#9f9f9f"
+      android:fillColor="#DDE2E3"
       android:fillType="evenOdd"/>
   <path
       android:pathData="M700,300h100v100h-100z"
-      android:fillColor="#9f9f9f"
+      android:fillColor="#DDE2E3"
       android:fillType="evenOdd"/>
   <path
       android:pathData="M700,500h100v100h-100z"
-      android:fillColor="#9f9f9f"
+      android:fillColor="#DDE2E3"
       android:fillType="evenOdd"/>
   <path
       android:pathData="M700,700h100v100h-100z"
-      android:fillColor="#9f9f9f"
+      android:fillColor="#DDE2E3"
       android:fillType="evenOdd"/>
   <path
       android:pathData="M100.02,-0h100v100h-100z"
-      android:fillColor="#666"
+      android:fillColor="#8C8C8C"
       android:fillType="evenOdd"/>
   <path
       android:pathData="M0.02,100h100v100h-100z"
-      android:fillColor="#666"
+      android:fillColor="#8C8C8C"
       android:fillType="evenOdd"/>
   <path
       android:pathData="M0.02,300h100v100h-100z"
-      android:fillColor="#666"
+      android:fillColor="#8C8C8C"
       android:fillType="evenOdd"/>
   <path
       android:pathData="M0.02,500h100v100h-100z"
-      android:fillColor="#666"
+      android:fillColor="#8C8C8C"
       android:fillType="evenOdd"/>
   <path
       android:pathData="M0.02,700h100v100h-100z"
-      android:fillColor="#666"
+      android:fillColor="#8C8C8C"
       android:fillType="evenOdd"/>
   <path
       android:pathData="M100.02,200h100v100h-100z"
-      android:fillColor="#666"
+      android:fillColor="#8C8C8C"
       android:fillType="evenOdd"/>
   <path
       android:pathData="M100.02,400h100v100h-100z"
-      android:fillColor="#666"
+      android:fillColor="#8C8C8C"
       android:fillType="evenOdd"/>
   <path
       android:pathData="M100.02,600h100v100h-100z"
-      android:fillColor="#666"
+      android:fillColor="#8C8C8C"
       android:fillType="evenOdd"/>
   <path
       android:pathData="M200.02,100h100v100h-100z"
-      android:fillColor="#666"
+      android:fillColor="#8C8C8C"
       android:fillType="evenOdd"/>
   <path
       android:pathData="M200.02,300h100v100h-100z"
-      android:fillColor="#666"
+      android:fillColor="#8C8C8C"
       android:fillType="evenOdd"/>
   <path
       android:pathData="M200.02,500h100v100h-100z"
-      android:fillColor="#666"
+      android:fillColor="#8C8C8C"
       android:fillType="evenOdd"/>
   <path
       android:pathData="M200.02,700h100v100h-100z"
-      android:fillColor="#666"
+      android:fillColor="#8C8C8C"
       android:fillType="evenOdd"/>
   <path
       android:pathData="M300.02,-0h100v100h-100z"
-      android:fillColor="#666"
+      android:fillColor="#8C8C8C"
       android:fillType="evenOdd"/>
   <path
       android:pathData="M300.02,200h100v100h-100z"
-      android:fillColor="#666"
+      android:fillColor="#8C8C8C"
       android:fillType="evenOdd"/>
   <path
       android:pathData="M300.02,400h100v100h-100z"
-      android:fillColor="#666"
+      android:fillColor="#8C8C8C"
       android:fillType="evenOdd"/>
   <path
       android:pathData="M300.02,600h100v100h-100z"
-      android:fillColor="#666"
+      android:fillColor="#8C8C8C"
       android:fillType="evenOdd"/>
   <path
       android:pathData="M400.02,100h100v100h-100z"
-      android:fillColor="#666"
+      android:fillColor="#8C8C8C"
       android:fillType="evenOdd"/>
   <path
       android:pathData="M400.02,300h100v100h-100z"
-      android:fillColor="#666"
+      android:fillColor="#8C8C8C"
       android:fillType="evenOdd"/>
   <path
       android:pathData="M400.02,500h100v100h-100z"
-      android:fillColor="#666"
+      android:fillColor="#8C8C8C"
       android:fillType="evenOdd"/>
   <path
       android:pathData="M400.02,700h100v100h-100z"
-      android:fillColor="#666"
+      android:fillColor="#8C8C8C"
       android:fillType="evenOdd"/>
   <path
       android:pathData="M500.02,-0h100v100h-100z"
-      android:fillColor="#666"
+      android:fillColor="#8C8C8C"
       android:fillType="evenOdd"/>
   <path
       android:pathData="M500.02,200h100v100h-100z"
-      android:fillColor="#666"
+      android:fillColor="#8C8C8C"
       android:fillType="evenOdd"/>
   <path
       android:pathData="M500.02,400h100v100h-100z"
-      android:fillColor="#666"
+      android:fillColor="#8C8C8C"
       android:fillType="evenOdd"/>
   <path
       android:pathData="M500.02,600h100v100h-100z"
-      android:fillColor="#666"
+      android:fillColor="#8C8C8C"
       android:fillType="evenOdd"/>
   <path
       android:pathData="M600.02,100h100v100h-100z"
-      android:fillColor="#666"
+      android:fillColor="#8C8C8C"
       android:fillType="evenOdd"/>
   <path
       android:pathData="M600.02,300h100v100h-100z"
-      android:fillColor="#666"
+      android:fillColor="#8C8C8C"
       android:fillType="evenOdd"/>
   <path
       android:pathData="M600.02,500h100v100h-100z"
-      android:fillColor="#666"
+      android:fillColor="#8C8C8C"
       android:fillType="evenOdd"/>
   <path
       android:pathData="M600.02,700h100v100h-100z"
-      android:fillColor="#666"
+      android:fillColor="#8C8C8C"
       android:fillType="evenOdd"/>
   <path
       android:pathData="M700.02,-0h100v100h-100z"
-      android:fillColor="#666"
+      android:fillColor="#8C8C8C"
       android:fillType="evenOdd"/>
   <path
       android:pathData="M700.02,200h100v100h-100z"
-      android:fillColor="#666"
+      android:fillColor="#8C8C8C"
       android:fillType="evenOdd"/>
   <path
       android:pathData="M700.02,400h100v100h-100z"
-      android:fillColor="#666"
+      android:fillColor="#8C8C8C"
       android:fillType="evenOdd"/>
   <path
       android:pathData="M700.02,600h100v100h-100z"
-      android:fillColor="#666"
+      android:fillColor="#8C8C8C"
       android:fillType="evenOdd"/>
 </vector>
