@@ -25,7 +25,15 @@ data class ChessPiece(
     }
     var isKingInCheck = false
 
-    fun anyValidMove(futureCoordinates: ArrayList<Int>): Boolean {
+    fun anyValidMove(futureCoordinates: ArrayList<Int>, testForColor: Boolean = true): Boolean {
+        val anyPieceOnFutureCoordinates = PieceManipulationHelper.isSomePieceAlreadyOnCoordinates(futureCoordinates)
+        if (anyPieceOnFutureCoordinates?.pieceColor == this.pieceColor) return false
+        val lastMovedPeace = PieceManipulationHelper.allChessPieces.find { it.wasLastMoved }
+        if (testForColor) {
+            lastMovedPeace?.let {
+                if (it.pieceColor == this.pieceColor) return false
+            }
+        }
         return ValidMoves.isValidMoveForPawn(futureCoordinates, this) ||
                 ValidMoves.isValidMoveForRookAndQueen(futureCoordinates, this) ||
                 ValidMoves.isValidMoveForKnight(futureCoordinates, this) ||

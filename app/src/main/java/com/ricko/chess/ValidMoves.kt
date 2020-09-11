@@ -17,13 +17,9 @@ object ValidMoves {
         futureCoordinates: ArrayList<Int>,
         chessPiece: ChessPiece
     ): Boolean {
+        if (chessPiece.pieceType != PieceType.PAWN) return false
         val pastCoordinates = chessPiece.chessCoordinates
         val anyPieceOnFutureCoordinates = isSomePieceAlreadyOnCoordinates(futureCoordinates)
-        val lastMovedPeace = allChessPieces.find { it.wasLastMoved }
-        lastMovedPeace?.let {
-            if (it.pieceColor == chessPiece.pieceColor) return false
-        }
-        if (chessPiece.pieceType != PieceType.PAWN) return false
 
         when (chessPiece.pieceColor) {
             PieceColor.WHITE -> {
@@ -152,14 +148,8 @@ object ValidMoves {
         futureCoordinates: ArrayList<Int>,
         chessPiece: ChessPiece
     ): Boolean {
-        val pastCoordinates = chessPiece.chessCoordinates
-        val anyPieceOnFutureCoordinates = isSomePieceAlreadyOnCoordinates(futureCoordinates)
-        val lastMovedPeace = allChessPieces.find { it.wasLastMoved }
         if (chessPiece.pieceType != PieceType.ROOK && chessPiece.pieceType != PieceType.QUEEN) return false
-        lastMovedPeace?.let {
-            if (it.pieceColor == chessPiece.pieceColor) return false
-        }
-        if (anyPieceOnFutureCoordinates?.pieceColor == chessPiece.pieceColor) return false
+        val pastCoordinates = chessPiece.chessCoordinates
         if (pastCoordinates[0] != futureCoordinates[0] && pastCoordinates[1] != futureCoordinates[1]) return false
 
         if (pastCoordinates[0] == futureCoordinates[0]) {
@@ -201,13 +191,7 @@ object ValidMoves {
         futureCoordinates: ArrayList<Int>,
         chessPiece: ChessPiece
     ): Boolean {
-        val anyPieceOnFutureCoordinates = isSomePieceAlreadyOnCoordinates(futureCoordinates)
-        val lastMovedPeace = allChessPieces.find { it.wasLastMoved }
         if (chessPiece.pieceType != PieceType.KNIGHT) return false
-        lastMovedPeace?.let {
-            if (it.pieceColor == chessPiece.pieceColor) return false
-        }
-        if (anyPieceOnFutureCoordinates?.pieceColor == chessPiece.pieceColor) return false
 
         val currentCoordinatesX = chessPiece.chessCoordinates[0]
         val currentCoordinatesY = chessPiece.chessCoordinates[1]
@@ -230,16 +214,9 @@ object ValidMoves {
         futureCoordinates: ArrayList<Int>,
         chessPiece: ChessPiece
     ): Boolean {
-        val pastCoordinates = chessPiece.chessCoordinates
-        val anyPieceOnFutureCoordinates = isSomePieceAlreadyOnCoordinates(futureCoordinates)
-        val lastMovedPeace = allChessPieces.find { it.wasLastMoved }
-
-        lastMovedPeace?.let {
-            if (it.pieceColor == chessPiece.pieceColor) return false
-        }
-
         if (chessPiece.pieceType != PieceType.BISHOP && chessPiece.pieceType != PieceType.QUEEN) return false
 
+        val pastCoordinates = chessPiece.chessCoordinates
         if (abs(futureCoordinates[0] - pastCoordinates[0]) != abs(futureCoordinates[1] - pastCoordinates[1])) return false
 
         if (pastCoordinates[0] < futureCoordinates[0] && pastCoordinates[1] < futureCoordinates[1]) {
@@ -274,13 +251,7 @@ object ValidMoves {
         futureCoordinates: ArrayList<Int>,
         chessPiece: ChessPiece
     ): Boolean {
-        val anyPieceOnFutureCoordinates = isSomePieceAlreadyOnCoordinates(futureCoordinates)
-        val lastMovedPeace = allChessPieces.find { it.wasLastMoved }
-        lastMovedPeace?.let {
-            if (it.pieceColor == chessPiece.pieceColor) return false
-        }
         if (chessPiece.pieceType != PieceType.KING) return false
-        if (anyPieceOnFutureCoordinates?.pieceColor == chessPiece.pieceColor) return false
 
         val currentCoordinatesX = chessPiece.chessCoordinates[0]
         val currentCoordinatesY = chessPiece.chessCoordinates[1]

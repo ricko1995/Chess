@@ -6,6 +6,7 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
 import com.ricko.chess.MainActivity.Companion.activityLayout
 import com.ricko.chess.MainActivity.Companion.chessBoard
+import com.ricko.chess.ValidMoves.isValidMoveForBishopAndQueen
 import com.ricko.chess.ValidMoves.isValidMoveForPawn
 import kotlin.collections.ArrayList
 
@@ -220,15 +221,25 @@ object PieceManipulationHelper {
     private fun isKingInCheck(futureChessCoordinates: ArrayList<Int>, chessPieceToMove: ChessPiece): Boolean {
         val king = allChessPieces.filter { it.pieceType == PieceType.KING }.find { it.pieceColor == chessPieceToMove.pieceColor }
         val dummyPiece = ChessPiece(chessPieceToMove.pieceColor, futureChessCoordinates, chessPieceToMove.pieceType, null, futureChessCoordinates)
+        val isPieceToMoveKing = king == chessPieceToMove
+        val isItCapture = isSomePieceAlreadyOnCoordinates(futureChessCoordinates)
+        isItCapture?.let {
+            allChessPieces.remove(it)
+        }
         allChessPieces.add(dummyPiece)
+        allChessPieces.remove(chessPieceToMove)
         var bool = false
 
         for (piece in allChessPieces.filter { it.pieceColor != chessPieceToMove.pieceColor }) {
-            if (piece.anyValidMove(king!!.chessCoordinates)) {
+            if (piece.anyValidMove(if (isPieceToMoveKing) dummyPiece.chessCoordinates else king!!.chessCoordinates, false)) {
                 bool = true
             }
         }
         allChessPieces.remove(dummyPiece)
+        allChessPieces.add(chessPieceToMove)
+        isItCapture?.let {
+            allChessPieces.add(it)
+        }
         return bool
     }
 
