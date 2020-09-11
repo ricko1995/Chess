@@ -9,18 +9,12 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
 import com.ricko.chess.PieceManipulationHelper.allChessPieces
-import com.ricko.chess.PieceManipulationHelper.createBishops
-import com.ricko.chess.PieceManipulationHelper.createKings
-import com.ricko.chess.PieceManipulationHelper.createKnights
-import com.ricko.chess.PieceManipulationHelper.createPawns
-import com.ricko.chess.PieceManipulationHelper.createQueens
-import com.ricko.chess.PieceManipulationHelper.createRooks
 import com.ricko.chess.PieceManipulationHelper.getClosestPeace
 import com.ricko.chess.PieceManipulationHelper.isBlackKingInCheck
 import com.ricko.chess.PieceManipulationHelper.isWhiteKingInCheck
 import com.ricko.chess.PieceManipulationHelper.movePieceToCoordinates
-import com.ricko.chess.PieceManipulationHelper.removeAllPiecesFromBoard
 import com.ricko.chess.PieceManipulationHelper.resetPeacePosition
+import com.ricko.chess.PieceManipulationHelper.startNewGame
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
@@ -49,19 +43,8 @@ class MainActivity : AppCompatActivity() {
         activityLayout = findViewById(R.id.activity_layout)
         context = this
 
-        var newGame = false
         btnNewGame.setOnClickListener {
-            if (newGame) {
-                activityLayout.removeAllPiecesFromBoard()
-            } else {
-                activityLayout.createPawns()
-                activityLayout.createKings()
-                activityLayout.createQueens()
-                activityLayout.createBishops()
-                activityLayout.createKnights()
-                activityLayout.createRooks()
-            }
-            newGame = !newGame
+            activityLayout.startNewGame()
         }
         var pieceToManipulate: ChessPiece? = null
         chessBoard.setOnTouchListener { view, motionEvent ->

@@ -10,7 +10,9 @@ import com.ricko.chess.MainActivity.Companion.activityLayout
 import com.ricko.chess.MainActivity.Companion.chessBoard
 import com.ricko.chess.MainActivity.Companion.context
 import com.ricko.chess.ValidMoves.isValidMoveForPawn
-import kotlinx.android.synthetic.main.promotion_dialog_layout.*
+import kotlinx.android.synthetic.main.game_over_dialog.*
+import kotlinx.android.synthetic.main.promotion_dialog.*
+import java.util.*
 import kotlin.collections.ArrayList
 
 object PieceManipulationHelper {
@@ -21,6 +23,19 @@ object PieceManipulationHelper {
     var captureWhitePawnEnPassantOnLeft = false
     var captureWhitePawnEnPassantOnRight = false
     private const val pieceDimensionDivider = 9
+
+    fun ConstraintLayout.startNewGame() {
+        if (allChessPieces.isNotEmpty()) {
+            removeAllPiecesFromBoard()
+            getViewById(R.id.txtNextOnMove).visibility = View.GONE
+        }
+        createPawns()
+        createKings()
+        createQueens()
+        createBishops()
+        createKnights()
+        createRooks()
+    }
 
     private fun ConstraintLayout.positionPeaceOnBoardForNewGame(
         chessPiece: ChessPiece
@@ -41,7 +56,7 @@ object PieceManipulationHelper {
 
     }
 
-    fun ConstraintLayout.createPawns() {
+    private fun ConstraintLayout.createPawns() {
         val numberOfPieces = 16
         repeat(numberOfPieces) {
             val pawnView = ImageView(context)
@@ -67,7 +82,7 @@ object PieceManipulationHelper {
         }
     }
 
-    fun ConstraintLayout.createKings() {
+    private fun ConstraintLayout.createKings() {
         val numberOfPieces = 2
         repeat(numberOfPieces) {
             val kingView = ImageView(context)
@@ -93,7 +108,7 @@ object PieceManipulationHelper {
         }
     }
 
-    fun ConstraintLayout.createQueens() {
+    private fun ConstraintLayout.createQueens() {
         val numberOfPieces = 2
         repeat(numberOfPieces) {
             val queenView = ImageView(context)
@@ -119,7 +134,7 @@ object PieceManipulationHelper {
         }
     }
 
-    fun ConstraintLayout.createBishops() {
+    private fun ConstraintLayout.createBishops() {
         val numberOfPieces = 4
         val bishopsCoordinate: ArrayList<ArrayList<Int>> =
             arrayListOf(arrayListOf(2, 7), arrayListOf(5, 7), arrayListOf(2, 0), arrayListOf(5, 0))
@@ -141,7 +156,7 @@ object PieceManipulationHelper {
         }
     }
 
-    fun ConstraintLayout.createKnights() {
+    private fun ConstraintLayout.createKnights() {
         val numberOfPieces = 4
         val knightsCoordinate: ArrayList<ArrayList<Int>> =
             arrayListOf(arrayListOf(1, 7), arrayListOf(6, 7), arrayListOf(1, 0), arrayListOf(6, 0))
@@ -163,7 +178,7 @@ object PieceManipulationHelper {
         }
     }
 
-    fun ConstraintLayout.createRooks() {
+    private fun ConstraintLayout.createRooks() {
         val numberOfPieces = 4
         val rooksCoordinate: ArrayList<ArrayList<Int>> =
             arrayListOf(arrayListOf(0, 7), arrayListOf(7, 7), arrayListOf(0, 0), arrayListOf(7, 0))
@@ -185,7 +200,7 @@ object PieceManipulationHelper {
         }
     }
 
-    fun ConstraintLayout.removeAllPiecesFromBoard() {
+    private fun ConstraintLayout.removeAllPiecesFromBoard() {
         for (piece in allChessPieces) {
             removeView(piece.pieceView)
         }
@@ -223,16 +238,28 @@ object PieceManipulationHelper {
         for (piece in pieces) {
             for (i in 0..7) {
                 for (j in 0..7) {
-                    if(piece.isValidMove(arrayListOf(i, j), false)){
-                        if(isValidMoveToBlockCheck(arrayListOf(i, j), piece)) {
+                    if (piece.isValidMove(arrayListOf(i, j), false)) {
+                        if (isValidMoveToBlockCheck(arrayListOf(i, j), piece)) {
                             return
                         }
                     }
                 }
             }
         }
-        val winner = if(color==PieceColor.BLACK) PieceColor.WHITE else PieceColor.BLACK
-        Toast.makeText(context, "${winner.name} won the game!", Toast.LENGTH_SHORT).show()
+        openDialogForGameOver(if (color == PieceColor.BLACK) PieceColor.WHITE else PieceColor.BLACK)
+    }
+
+    private fun openDialogForGameOver(victoryColor: PieceColor) {
+        val dialog = Dialog(context)
+        dialog.setContentView(R.layout.game_over_dialog)
+        dialog.btnResetBoard.setOnClickListener {
+            activityLayout.startNewGame()
+            dialog.cancel()
+        }
+        val color = victoryColor.name.toLowerCase(Locale.ROOT).capitalize(Locale.ROOT)
+        val msgToWinner = "$color wins the game!"
+        dialog.txtMessageToWinner.text = msgToWinner
+        dialog.show()
     }
 
     fun isValidMoveToBlockCheck(futureChessCoordinates: ArrayList<Int>, chessPieceToMove: ChessPiece): Boolean {
@@ -300,7 +327,7 @@ object PieceManipulationHelper {
 
     private fun openDialogForPiecePromotion(chessPieceToMove: ChessPiece) {
         val dialog = Dialog(context)
-        dialog.setContentView(R.layout.promotion_dialog_layout)
+        dialog.setContentView(R.layout.promotion_dialog)
         dialog.btnQueen.setOnClickListener {
             chessPieceToMove.pieceView?.setImageResource(
                 if (chessPieceToMove.pieceColor == PieceColor.WHITE) R.drawable.ic_white_queen else R.drawable.ic_black_queen
