@@ -11,10 +11,11 @@ data class ChessPiece(
     val pieceView: View?,
     var chessCoordinates: ArrayList<Int> = arrayListOf(-1, -1),
     var wasLastMoved: Boolean = false,
-    val id: String = UUID.randomUUID().toString()
+    val id: String = UUID.randomUUID().toString(),
+    var wasPieceMoved: Boolean = false
 ) {
-    val pieceValue: Int by lazy {
-        when (pieceType) {
+    fun pieceValue(): Int {
+        return when (this.pieceType) {
             PieceType.KING -> 4
             PieceType.QUEEN -> 9
             PieceType.ROOK -> 5
@@ -23,7 +24,6 @@ data class ChessPiece(
             PieceType.PAWN -> 1
         }
     }
-    var isKingInCheck = false
 
     fun anyValidMove(futureCoordinates: ArrayList<Int>, testForColor: Boolean = true): Boolean {
         val anyPieceOnFutureCoordinates = PieceManipulationHelper.isSomePieceAlreadyOnCoordinates(futureCoordinates)

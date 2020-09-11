@@ -1,12 +1,13 @@
 package com.ricko.chess
 
-import android.view.View
 import com.ricko.chess.PieceManipulationHelper.allChessPieces
 import com.ricko.chess.PieceManipulationHelper.captureBlackPawnEnPassantOnLeft
 import com.ricko.chess.PieceManipulationHelper.captureBlackPawnEnPassantOnRight
 import com.ricko.chess.PieceManipulationHelper.captureWhitePawnEnPassantOnLeft
 import com.ricko.chess.PieceManipulationHelper.captureWhitePawnEnPassantOnRight
+import com.ricko.chess.PieceManipulationHelper.isKingInCheck
 import com.ricko.chess.PieceManipulationHelper.isSomePieceAlreadyOnCoordinates
+import com.ricko.chess.PieceManipulationHelper.updateMovedPiece
 import kotlin.math.abs
 
 object ValidMoves {
@@ -266,21 +267,51 @@ object ValidMoves {
                 arrayListOf(currentCoordinatesX + 1, currentCoordinatesY - 1),
                 arrayListOf(currentCoordinatesX - 1, currentCoordinatesY + 1),
             )
+        val kingSideCastleCoordinates = arrayListOf(currentCoordinatesX + 2, currentCoordinatesY)
+        val queenSideCastleCoordinates = arrayListOf(currentCoordinatesX - 2, currentCoordinatesY)
+
+        val kingSideRook = allChessPieces.find { it.chessCoordinates == arrayListOf(7, currentCoordinatesY) }
+        val queenSideRook = allChessPieces.find { it.chessCoordinates == arrayListOf(0, currentCoordinatesY) }
+
         if (validKingCoordinates.contains(futureCoordinates)) return true
+
+        if (futureCoordinates == kingSideCastleCoordinates) {
+            kingSideRook?.let { rook ->
+                val isRookValid = rook.pieceType == PieceType.ROOK && !rook.wasPieceMoved
+                val isKingValid = !chessPiece.wasPieceMoved
+                val isPathToCastleEmpty = isSomePieceAlreadyOnCoordinates(arrayListOf(5, currentCoordinatesY)) == null &&
+                        isSomePieceAlreadyOnCoordinates(arrayListOf(6, currentCoordinatesY)) == null
+
+                if (isKingValid && isRookValid && isPathToCastleEmpty) {
+                    if (!isKingInCheck(arrayListOf(5, currentCoordinatesY), chessPiece) &&
+                        !isKingInCheck(arrayListOf(6, currentCoordinatesY), chessPiece)
+                    ) {
+                        updateMovedPiece(arrayListOf(5, currentCoordinatesY), rook)
+                        return true
+                    }
+                }
+
+            }
+        }
+        if (futureCoordinates == queenSideCastleCoordinates) {
+            queenSideRook?.let { rook ->
+                val isRookValid = rook.pieceType == PieceType.ROOK && !rook.wasPieceMoved
+                val isKingValid = !chessPiece.wasPieceMoved
+                val isPathToCastleEmpty = isSomePieceAlreadyOnCoordinates(arrayListOf(3, currentCoordinatesY)) == null &&
+                        isSomePieceAlreadyOnCoordinates(arrayListOf(2, currentCoordinatesY)) == null &&
+                        isSomePieceAlreadyOnCoordinates(arrayListOf(1, currentCoordinatesY)) == null
+
+                if (isKingValid && isRookValid && isPathToCastleEmpty) {
+                    if (!isKingInCheck(arrayListOf(3, currentCoordinatesY), chessPiece) &&
+                        !isKingInCheck(arrayListOf(2, currentCoordinatesY), chessPiece)
+                    ) {
+                        updateMovedPiece(arrayListOf(3, currentCoordinatesY), rook)
+                        return true
+                    }
+                }
+
+            }
+        }
         return false
     }
-
-//    private fun kingInCheck(): Boolean {
-//        val lastMovedPeaceColor = allChessPieces.find { it.wasLastMoved }?.pieceColor
-//        lastMovedPeaceColor?.let {
-//            val whiteOrBlackPieces = allChessPieces.filter { it.pieceColor != lastMovedPeaceColor }
-//            val blackOrWhiteKing = allChessPieces.filter { it.pieceType == PieceType.KING }.find { it.pieceColor == lastMovedPeaceColor }
-//            for (piece in whiteOrBlackPieces) {
-//                if (piece.anyValidMove(blackOrWhiteKing!!.chessCoordinates)) {
-//                    return true
-//                }
-//            }
-//        }
-//        return false
-//    }
 }

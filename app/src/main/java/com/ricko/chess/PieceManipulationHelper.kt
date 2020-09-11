@@ -6,7 +6,6 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
 import com.ricko.chess.MainActivity.Companion.activityLayout
 import com.ricko.chess.MainActivity.Companion.chessBoard
-import com.ricko.chess.ValidMoves.isValidMoveForBishopAndQueen
 import com.ricko.chess.ValidMoves.isValidMoveForPawn
 import kotlin.collections.ArrayList
 
@@ -218,7 +217,7 @@ object PieceManipulationHelper {
         allChessPieces.clear()
     }
 
-    private fun isKingInCheck(futureChessCoordinates: ArrayList<Int>, chessPieceToMove: ChessPiece): Boolean {
+    fun isKingInCheck(futureChessCoordinates: ArrayList<Int>, chessPieceToMove: ChessPiece): Boolean {
         val king = allChessPieces.filter { it.pieceType == PieceType.KING }.find { it.pieceColor == chessPieceToMove.pieceColor }
         val dummyPiece = ChessPiece(chessPieceToMove.pieceColor, futureChessCoordinates, chessPieceToMove.pieceType, null, futureChessCoordinates)
         val isPieceToMoveKing = king == chessPieceToMove
@@ -231,8 +230,10 @@ object PieceManipulationHelper {
         var bool = false
 
         for (piece in allChessPieces.filter { it.pieceColor != chessPieceToMove.pieceColor }) {
-            if (piece.anyValidMove(if (isPieceToMoveKing) dummyPiece.chessCoordinates else king!!.chessCoordinates, false)) {
-                bool = true
+            king?.let {
+                if (piece.anyValidMove(if (isPieceToMoveKing) dummyPiece.chessCoordinates else king.chessCoordinates, false)) {
+                    bool = true
+                }
             }
         }
         allChessPieces.remove(dummyPiece)
@@ -243,10 +244,12 @@ object PieceManipulationHelper {
         return bool
     }
 
-    private fun updateMovedPiece(
-        chessPieceToMove: ChessPiece,
-        futureChessCoordinates: ArrayList<Int>
+    fun updateMovedPiece(
+        futureChessCoordinates: ArrayList<Int>,
+        chessPieceToMove: ChessPiece
     ) {
+
+        println(chessPieceToMove.pieceType == PieceType.ROOK)
         if (isKingInCheck(futureChessCoordinates, chessPieceToMove)) {
             resetPeacePosition(chessPieceToMove)
             return
@@ -265,6 +268,7 @@ object PieceManipulationHelper {
             piece.wasLastMoved = false
         }
         chessPieceToMove.wasLastMoved = true
+        chessPieceToMove.wasPieceMoved = true
     }
 
     fun movePieceToCoordinates(
@@ -278,7 +282,7 @@ object PieceManipulationHelper {
 
         anyPieceOnFutureCoordinates?.let {
             if (it.pieceColor != chessPieceToMove.pieceColor && anyValidMove) {
-                updateMovedPiece(chessPieceToMove, futureChessCoordinates)
+                updateMovedPiece(futureChessCoordinates, chessPieceToMove)
                 return
             } else {
                 resetPeacePosition(chessPieceToMove)
@@ -327,7 +331,7 @@ object PieceManipulationHelper {
             }
         }
         if (anyValidMove) {
-            updateMovedPiece(chessPieceToMove, futureChessCoordinates)
+            updateMovedPiece(futureChessCoordinates, chessPieceToMove)
         } else resetPeacePosition(chessPieceToMove)
 
     }
