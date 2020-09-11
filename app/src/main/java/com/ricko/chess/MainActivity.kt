@@ -1,10 +1,13 @@
 package com.ricko.chess
 
+import android.content.Context
 import android.os.Bundle
 import android.view.MotionEvent
 import android.view.View
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.content.ContextCompat
 import com.ricko.chess.PieceManipulationHelper.allChessPieces
 import com.ricko.chess.PieceManipulationHelper.createBishops
 import com.ricko.chess.PieceManipulationHelper.createKings
@@ -13,6 +16,8 @@ import com.ricko.chess.PieceManipulationHelper.createPawns
 import com.ricko.chess.PieceManipulationHelper.createQueens
 import com.ricko.chess.PieceManipulationHelper.createRooks
 import com.ricko.chess.PieceManipulationHelper.getClosestPeace
+import com.ricko.chess.PieceManipulationHelper.isBlackKingInCheck
+import com.ricko.chess.PieceManipulationHelper.isWhiteKingInCheck
 import com.ricko.chess.PieceManipulationHelper.movePieceToCoordinates
 import com.ricko.chess.PieceManipulationHelper.removeAllPiecesFromBoard
 import com.ricko.chess.PieceManipulationHelper.resetPeacePosition
@@ -23,6 +28,17 @@ class MainActivity : AppCompatActivity() {
     companion object {
         lateinit var chessBoard: View
         lateinit var activityLayout: ConstraintLayout
+        lateinit var context: Context
+    }
+
+    override fun onBackPressed() {
+        val dialog = AlertDialog.Builder(this)
+        dialog.setMessage("Are you sure you want to exit?")
+        dialog.setPositiveButton("Yes") { _, _ ->
+            super.onBackPressed()
+        }
+        dialog.setNegativeButton("No") { _, _ -> }
+        dialog.show()
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -31,18 +47,19 @@ class MainActivity : AppCompatActivity() {
 
         chessBoard = findViewById(R.id.chess_board)
         activityLayout = findViewById(R.id.activity_layout)
+        context = this
 
         var newGame = false
         btnNewGame.setOnClickListener {
             if (newGame) {
                 activityLayout.removeAllPiecesFromBoard()
             } else {
-                activityLayout.createPawns(this)
-                activityLayout.createKings(this)
-                activityLayout.createQueens(this)
-                activityLayout.createBishops(this)
-                activityLayout.createKnights(this)
-                activityLayout.createRooks(this)
+                activityLayout.createPawns()
+                activityLayout.createKings()
+                activityLayout.createQueens()
+                activityLayout.createBishops()
+                activityLayout.createKnights()
+                activityLayout.createRooks()
             }
             newGame = !newGame
         }
@@ -93,6 +110,17 @@ class MainActivity : AppCompatActivity() {
                         if (it.pieceColor == PieceColor.WHITE) {
                             txtNextOnMove.text = "Black to move"
                         } else txtNextOnMove.text = "White to move"
+                    }
+
+                    isBlackKingInCheck()?.let { king ->
+                        king.pieceView?.apply {
+                            background = ContextCompat.getDrawable(context, R.drawable.circle_red)
+                        }
+                    }
+                    isWhiteKingInCheck()?.let { king ->
+                        king.pieceView?.apply {
+                            background = ContextCompat.getDrawable(context, R.drawable.circle_red)
+                        }
                     }
                 }
             }

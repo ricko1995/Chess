@@ -1,12 +1,15 @@
 package com.ricko.chess
 
-import android.content.Context
+import android.app.Dialog
 import android.view.View
+import android.widget.ImageView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
 import com.ricko.chess.MainActivity.Companion.activityLayout
 import com.ricko.chess.MainActivity.Companion.chessBoard
+import com.ricko.chess.MainActivity.Companion.context
 import com.ricko.chess.ValidMoves.isValidMoveForPawn
+import kotlinx.android.synthetic.main.promotion_dialog_layout.*
 import kotlin.collections.ArrayList
 
 object PieceManipulationHelper {
@@ -16,14 +19,15 @@ object PieceManipulationHelper {
     var captureBlackPawnEnPassantOnRight = false
     var captureWhitePawnEnPassantOnLeft = false
     var captureWhitePawnEnPassantOnRight = false
+    private const val pieceDimensionDivider = 9
 
     private fun ConstraintLayout.positionPeaceOnBoardForNewGame(
         chessPiece: ChessPiece
     ) {
         addView(chessPiece.pieceView)
         val boardLayoutParams = ConstraintLayout.LayoutParams(
-            chessBoard.width / 10,
-            chessBoard.height / 10
+            chessBoard.width / pieceDimensionDivider,
+            chessBoard.height / pieceDimensionDivider
         )
         chessPiece.pieceView?.let {
             it.apply {
@@ -36,17 +40,12 @@ object PieceManipulationHelper {
 
     }
 
-    fun ConstraintLayout.createPawns(context: Context) {
+    fun ConstraintLayout.createPawns() {
         val numberOfPieces = 16
         repeat(numberOfPieces) {
-            val pawnView = View(context)
+            val pawnView = ImageView(context)
             pawnView.id = View.generateViewId()
-            pawnView.background =
-                if (it < numberOfPieces / 2) ContextCompat.getDrawable(
-                    context,
-                    R.drawable.ic_white_pawn
-                )
-                else ContextCompat.getDrawable(context, R.drawable.ic_black_pawn)
+            pawnView.setImageResource(if (it < numberOfPieces / 2) R.drawable.ic_white_pawn else R.drawable.ic_black_pawn)
             val chessPiece = ChessPiece(
                 if (it < numberOfPieces / 2) PieceColor.WHITE else PieceColor.BLACK,
                 fromChessCoordinatesToPixelCoordinates(
@@ -67,17 +66,12 @@ object PieceManipulationHelper {
         }
     }
 
-    fun ConstraintLayout.createKings(context: Context) {
+    fun ConstraintLayout.createKings() {
         val numberOfPieces = 2
         repeat(numberOfPieces) {
-            val kingView = View(context)
+            val kingView = ImageView(context)
             kingView.id = View.generateViewId()
-            kingView.background =
-                if (it < numberOfPieces / 2) ContextCompat.getDrawable(
-                    context,
-                    R.drawable.ic_white_king
-                )
-                else ContextCompat.getDrawable(context, R.drawable.ic_black_king)
+            kingView.setImageResource(if (it < numberOfPieces / 2) R.drawable.ic_white_king else R.drawable.ic_black_king)
             val chessPiece = ChessPiece(
                 if (it < numberOfPieces / 2) PieceColor.WHITE else PieceColor.BLACK,
                 fromChessCoordinatesToPixelCoordinates(
@@ -98,17 +92,12 @@ object PieceManipulationHelper {
         }
     }
 
-    fun ConstraintLayout.createQueens(context: Context) {
+    fun ConstraintLayout.createQueens() {
         val numberOfPieces = 2
         repeat(numberOfPieces) {
-            val queenView = View(context)
+            val queenView = ImageView(context)
             queenView.id = View.generateViewId()
-            queenView.background =
-                if (it < numberOfPieces / 2) ContextCompat.getDrawable(
-                    context,
-                    R.drawable.ic_white_queen
-                )
-                else ContextCompat.getDrawable(context, R.drawable.ic_black_queen)
+            queenView.setImageResource(if (it < numberOfPieces / 2) R.drawable.ic_white_queen else R.drawable.ic_black_queen)
             val chessPiece = ChessPiece(
                 if (it < numberOfPieces / 2) PieceColor.WHITE else PieceColor.BLACK,
                 fromChessCoordinatesToPixelCoordinates(
@@ -129,19 +118,14 @@ object PieceManipulationHelper {
         }
     }
 
-    fun ConstraintLayout.createBishops(context: Context) {
+    fun ConstraintLayout.createBishops() {
         val numberOfPieces = 4
         val bishopsCoordinate: ArrayList<ArrayList<Int>> =
             arrayListOf(arrayListOf(2, 7), arrayListOf(5, 7), arrayListOf(2, 0), arrayListOf(5, 0))
         repeat(numberOfPieces) {
-            val bishopView = View(context)
+            val bishopView = ImageView(context)
             bishopView.id = View.generateViewId()
-            bishopView.background =
-                if (it < numberOfPieces / 2) ContextCompat.getDrawable(
-                    context,
-                    R.drawable.ic_white_bishop
-                )
-                else ContextCompat.getDrawable(context, R.drawable.ic_black_bishop)
+            bishopView.setImageResource(if (it < numberOfPieces / 2) R.drawable.ic_white_bishop else R.drawable.ic_black_bishop)
             val chessPiece = ChessPiece(
                 if (it < numberOfPieces / 2) PieceColor.WHITE else PieceColor.BLACK,
                 fromChessCoordinatesToPixelCoordinates(
@@ -156,19 +140,14 @@ object PieceManipulationHelper {
         }
     }
 
-    fun ConstraintLayout.createKnights(context: Context) {
+    fun ConstraintLayout.createKnights() {
         val numberOfPieces = 4
         val knightsCoordinate: ArrayList<ArrayList<Int>> =
             arrayListOf(arrayListOf(1, 7), arrayListOf(6, 7), arrayListOf(1, 0), arrayListOf(6, 0))
         repeat(numberOfPieces) {
-            val knightView = View(context)
+            val knightView = ImageView(context)
             knightView.id = View.generateViewId()
-            knightView.background =
-                if (it < numberOfPieces / 2) ContextCompat.getDrawable(
-                    context,
-                    R.drawable.ic_white_knight
-                )
-                else ContextCompat.getDrawable(context, R.drawable.ic_black_knight)
+            knightView.setImageResource(if (it < numberOfPieces / 2) R.drawable.ic_white_knight else R.drawable.ic_black_knight)
             val chessPiece = ChessPiece(
                 if (it < numberOfPieces / 2) PieceColor.WHITE else PieceColor.BLACK,
                 fromChessCoordinatesToPixelCoordinates(
@@ -183,19 +162,14 @@ object PieceManipulationHelper {
         }
     }
 
-    fun ConstraintLayout.createRooks(context: Context) {
+    fun ConstraintLayout.createRooks() {
         val numberOfPieces = 4
         val rooksCoordinate: ArrayList<ArrayList<Int>> =
             arrayListOf(arrayListOf(0, 7), arrayListOf(7, 7), arrayListOf(0, 0), arrayListOf(7, 0))
         repeat(numberOfPieces) {
-            val rookView = View(context)
+            val rookView = ImageView(context)
             rookView.id = View.generateViewId()
-            rookView.background =
-                if (it < numberOfPieces / 2) ContextCompat.getDrawable(
-                    context,
-                    R.drawable.ic_white_rook
-                )
-                else ContextCompat.getDrawable(context, R.drawable.ic_black_rook)
+            rookView.setImageResource(if (it < numberOfPieces / 2) R.drawable.ic_white_rook else R.drawable.ic_black_rook)
             val chessPiece = ChessPiece(
                 if (it < numberOfPieces / 2) PieceColor.WHITE else PieceColor.BLACK,
                 fromChessCoordinatesToPixelCoordinates(
@@ -217,7 +191,26 @@ object PieceManipulationHelper {
         allChessPieces.clear()
     }
 
-    fun isKingInCheck(futureChessCoordinates: ArrayList<Int>, chessPieceToMove: ChessPiece): Boolean {
+    fun isBlackKingInCheck(): ChessPiece? {
+        val king = allChessPieces.filter { it.pieceType == PieceType.KING }.find { it.pieceColor == PieceColor.BLACK }
+        val whitePieces = allChessPieces.filter { it.pieceColor == PieceColor.WHITE }
+
+        for (piece in whitePieces) {
+            if (piece.anyValidMove(king!!.chessCoordinates, false)) return king
+        }
+        return null
+    }
+    fun isWhiteKingInCheck(): ChessPiece? {
+        val king = allChessPieces.filter { it.pieceType == PieceType.KING }.find { it.pieceColor == PieceColor.WHITE }
+        val blackPieces = allChessPieces.filter { it.pieceColor == PieceColor.BLACK }
+
+        for (piece in blackPieces) {
+            if (piece.anyValidMove(king!!.chessCoordinates, false)) return king
+        }
+        return null
+    }
+
+    fun isValidMoveToBlockCheck(futureChessCoordinates: ArrayList<Int>, chessPieceToMove: ChessPiece): Boolean {
         val king = allChessPieces.filter { it.pieceType == PieceType.KING }.find { it.pieceColor == chessPieceToMove.pieceColor }
         val dummyPiece = ChessPiece(chessPieceToMove.pieceColor, futureChessCoordinates, chessPieceToMove.pieceType, null, futureChessCoordinates)
         val isPieceToMoveKing = king == chessPieceToMove
@@ -227,12 +220,12 @@ object PieceManipulationHelper {
         }
         allChessPieces.add(dummyPiece)
         allChessPieces.remove(chessPieceToMove)
-        var bool = false
+        var bool = true
 
         for (piece in allChessPieces.filter { it.pieceColor != chessPieceToMove.pieceColor }) {
             king?.let {
                 if (piece.anyValidMove(if (isPieceToMoveKing) dummyPiece.chessCoordinates else king.chessCoordinates, false)) {
-                    bool = true
+                    bool = false
                 }
             }
         }
@@ -250,7 +243,7 @@ object PieceManipulationHelper {
     ) {
 
         println(chessPieceToMove.pieceType == PieceType.ROOK)
-        if (isKingInCheck(futureChessCoordinates, chessPieceToMove)) {
+        if (!isValidMoveToBlockCheck(futureChessCoordinates, chessPieceToMove)) {
             resetPeacePosition(chessPieceToMove)
             return
         }
@@ -269,6 +262,50 @@ object PieceManipulationHelper {
         }
         chessPieceToMove.wasLastMoved = true
         chessPieceToMove.wasPieceMoved = true
+        for (piece in allChessPieces) {
+            if (piece.wasLastMoved) {
+                piece.pieceView?.background = ContextCompat.getDrawable(context, R.drawable.circle_blue)
+            } else piece.pieceView?.background = ContextCompat.getDrawable(context, R.drawable.no_background)
+
+        }
+
+        if (chessPieceToMove.pieceType == PieceType.PAWN && (chessPieceToMove.chessCoordinates[1] == 0 || chessPieceToMove.chessCoordinates[1] == 7)) {
+            openDialogForPiecePromotion(chessPieceToMove)
+        }
+    }
+
+    private fun openDialogForPiecePromotion(chessPieceToMove: ChessPiece) {
+        val dialog = Dialog(context)
+        dialog.setContentView(R.layout.promotion_dialog_layout)
+        dialog.btnQueen.setOnClickListener {
+            chessPieceToMove.pieceView?.setImageResource(
+                if (chessPieceToMove.pieceColor == PieceColor.WHITE) R.drawable.ic_white_queen else R.drawable.ic_black_queen
+            )
+            chessPieceToMove.pieceType = PieceType.QUEEN
+            dialog.cancel()
+        }
+        dialog.btnRook.setOnClickListener {
+            chessPieceToMove.pieceView?.setImageResource(
+                if (chessPieceToMove.pieceColor == PieceColor.WHITE) R.drawable.ic_white_rook else R.drawable.ic_black_rook
+            )
+            chessPieceToMove.pieceType = PieceType.ROOK
+            dialog.cancel()
+        }
+        dialog.btnBishop.setOnClickListener {
+            chessPieceToMove.pieceView?.setImageResource(
+                if (chessPieceToMove.pieceColor == PieceColor.WHITE) R.drawable.ic_white_bishop else R.drawable.ic_black_bishop
+            )
+            chessPieceToMove.pieceType = PieceType.BISHOP
+            dialog.cancel()
+        }
+        dialog.btnKnight.setOnClickListener {
+            chessPieceToMove.pieceView?.setImageResource(
+                if (chessPieceToMove.pieceColor == PieceColor.WHITE) R.drawable.ic_white_knight else R.drawable.ic_black_knight
+            )
+            chessPieceToMove.pieceType = PieceType.KNIGHT
+            dialog.cancel()
+        }
+        dialog.show()
     }
 
     fun movePieceToCoordinates(
@@ -378,7 +415,7 @@ object PieceManipulationHelper {
     private fun fromChessCoordinatesToPixelCoordinates(
         chessCoordinates: ArrayList<Int>
     ): ArrayList<Int> {
-        val pieceDimension = chessBoard.height / 10
+        val pieceDimension = chessBoard.height / pieceDimensionDivider
         if (chessCoordinates[0] !in 0..7 && chessCoordinates[1] !in 0..7) return arrayListOf(-1, -1)
         val x =
             chessBoard.width / 16 + chessCoordinates[0] * chessBoard.width / 8 - pieceDimension / 2

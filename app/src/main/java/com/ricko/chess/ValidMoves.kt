@@ -5,7 +5,7 @@ import com.ricko.chess.PieceManipulationHelper.captureBlackPawnEnPassantOnLeft
 import com.ricko.chess.PieceManipulationHelper.captureBlackPawnEnPassantOnRight
 import com.ricko.chess.PieceManipulationHelper.captureWhitePawnEnPassantOnLeft
 import com.ricko.chess.PieceManipulationHelper.captureWhitePawnEnPassantOnRight
-import com.ricko.chess.PieceManipulationHelper.isKingInCheck
+import com.ricko.chess.PieceManipulationHelper.isValidMoveToBlockCheck
 import com.ricko.chess.PieceManipulationHelper.isSomePieceAlreadyOnCoordinates
 import com.ricko.chess.PieceManipulationHelper.updateMovedPiece
 import kotlin.math.abs
@@ -283,8 +283,8 @@ object ValidMoves {
                         isSomePieceAlreadyOnCoordinates(arrayListOf(6, currentCoordinatesY)) == null
 
                 if (isKingValid && isRookValid && isPathToCastleEmpty) {
-                    if (!isKingInCheck(arrayListOf(5, currentCoordinatesY), chessPiece) &&
-                        !isKingInCheck(arrayListOf(6, currentCoordinatesY), chessPiece)
+                    if (isValidMoveToBlockCheck(arrayListOf(5, currentCoordinatesY), chessPiece) &&
+                        isValidMoveToBlockCheck(arrayListOf(6, currentCoordinatesY), chessPiece)
                     ) {
                         updateMovedPiece(arrayListOf(5, currentCoordinatesY), rook)
                         return true
@@ -302,8 +302,8 @@ object ValidMoves {
                         isSomePieceAlreadyOnCoordinates(arrayListOf(1, currentCoordinatesY)) == null
 
                 if (isKingValid && isRookValid && isPathToCastleEmpty) {
-                    if (!isKingInCheck(arrayListOf(3, currentCoordinatesY), chessPiece) &&
-                        !isKingInCheck(arrayListOf(2, currentCoordinatesY), chessPiece)
+                    if (isValidMoveToBlockCheck(arrayListOf(3, currentCoordinatesY), chessPiece) &&
+                        isValidMoveToBlockCheck(arrayListOf(2, currentCoordinatesY), chessPiece)
                     ) {
                         updateMovedPiece(arrayListOf(3, currentCoordinatesY), rook)
                         return true

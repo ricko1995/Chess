@@ -1,6 +1,7 @@
 package com.ricko.chess
 
 import android.view.View
+import android.widget.ImageView
 import java.util.*
 import kotlin.collections.ArrayList
 
@@ -8,7 +9,7 @@ data class ChessPiece(
     val pieceColor: PieceColor,
     var pixelCoordinates: ArrayList<Int> = arrayListOf(-1, -1),
     var pieceType: PieceType,
-    val pieceView: View?,
+    val pieceView: ImageView?,
     var chessCoordinates: ArrayList<Int> = arrayListOf(-1, -1),
     var wasLastMoved: Boolean = false,
     val id: String = UUID.randomUUID().toString(),
