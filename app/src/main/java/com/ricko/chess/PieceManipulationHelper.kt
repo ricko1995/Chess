@@ -481,6 +481,7 @@ object PieceManipulationHelper {
     ): ArrayList<Int> {
         val x: Int
         val y: Int
+        pixelCoordinates[0]  / (chessBoard.width / 8)
         when (pixelCoordinates[0]) {
             in 0..(chessBoard.width / 8) -> {
                 x = 0

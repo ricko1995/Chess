@@ -5,8 +5,10 @@ import com.ricko.chess.PieceManipulationHelper.captureBlackPawnEnPassantOnLeft
 import com.ricko.chess.PieceManipulationHelper.captureBlackPawnEnPassantOnRight
 import com.ricko.chess.PieceManipulationHelper.captureWhitePawnEnPassantOnLeft
 import com.ricko.chess.PieceManipulationHelper.captureWhitePawnEnPassantOnRight
+import com.ricko.chess.PieceManipulationHelper.isBlackKingInCheck
 import com.ricko.chess.PieceManipulationHelper.isValidMoveToBlockCheck
 import com.ricko.chess.PieceManipulationHelper.isSomePieceAlreadyOnCoordinates
+import com.ricko.chess.PieceManipulationHelper.isWhiteKingInCheck
 import com.ricko.chess.PieceManipulationHelper.updateMovedPiece
 import kotlin.math.abs
 
@@ -276,6 +278,7 @@ object ValidMoves {
         if (validKingCoordinates.contains(futureCoordinates)) return true
 
         if (futureCoordinates == kingSideCastleCoordinates) {
+            if (if (chessPiece.pieceColor == PieceColor.WHITE) isWhiteKingInCheck() != null else isBlackKingInCheck() != null) return false
             kingSideRook?.let { rook ->
                 val isRookValid = rook.pieceType == PieceType.ROOK && !rook.wasPieceMoved
                 val isKingValid = !chessPiece.wasPieceMoved
@@ -294,6 +297,7 @@ object ValidMoves {
             }
         }
         if (futureCoordinates == queenSideCastleCoordinates) {
+            if (if (chessPiece.pieceColor == PieceColor.WHITE) isWhiteKingInCheck() != null else isBlackKingInCheck() != null) return false
             queenSideRook?.let { rook ->
                 val isRookValid = rook.pieceType == PieceType.ROOK && !rook.wasPieceMoved
                 val isKingValid = !chessPiece.wasPieceMoved
