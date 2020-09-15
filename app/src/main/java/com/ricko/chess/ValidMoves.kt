@@ -57,7 +57,8 @@ object ValidMoves {
 
                 if (
                     futureCoordinates[0] == pastCoordinates[0] + 1 &&  //pawn captures En passant on right
-                    futureCoordinates[1] == pastCoordinates[1] - 1 &&
+                    pastCoordinates[1] == 3 &&
+                    futureCoordinates[1] == 2 &&
                     anyPieceOnFutureCoordinates == null &&
                     twoSquareMovePawn != null &&
                     allChessPieces.find { it.wasLastMoved }?.id == twoSquareMovePawn?.id &&
@@ -71,7 +72,8 @@ object ValidMoves {
 
                 if (
                     futureCoordinates[0] == pastCoordinates[0] - 1 &&  //pawn captures En passant on left
-                    futureCoordinates[1] == pastCoordinates[1] - 1 &&
+                    pastCoordinates[1] == 3 &&
+                    futureCoordinates[1] == 2 &&
                     anyPieceOnFutureCoordinates == null &&
                     twoSquareMovePawn != null &&
                     allChessPieces.find { it.wasLastMoved }?.id == twoSquareMovePawn?.id &&
@@ -116,7 +118,8 @@ object ValidMoves {
 
                 if (
                     futureCoordinates[0] == pastCoordinates[0] + 1 &&  //pawn captures En passant on right
-                    futureCoordinates[1] == pastCoordinates[1] + 1 &&
+                    pastCoordinates[1] == 4 &&
+                    futureCoordinates[1] == 5 &&
                     anyPieceOnFutureCoordinates == null &&
                     twoSquareMovePawn != null &&
                     allChessPieces.find { it.wasLastMoved }?.id == twoSquareMovePawn?.id &&
@@ -130,7 +133,8 @@ object ValidMoves {
 
                 if (
                     futureCoordinates[0] == pastCoordinates[0] - 1 &&  //pawn captures En passant on left
-                    futureCoordinates[1] == pastCoordinates[1] + 1 &&
+                    pastCoordinates[1] == 4 &&
+                    futureCoordinates[1] == 5 &&
                     anyPieceOnFutureCoordinates == null &&
                     twoSquareMovePawn != null &&
                     allChessPieces.find { it.wasLastMoved }?.id == twoSquareMovePawn?.id &&
